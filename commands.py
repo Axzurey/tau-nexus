@@ -30,7 +30,13 @@ class MoveCommand(Command):
         s = s.replace('  ', ' '); #replace double spaces that word removal might cause with single spaces.
 
     def callback(self, direction: str):
-        if direction in currentPlayer.currentNode and currentPlayer.currentNode[direction]:
+        if hasattr(currentPlayer.currentNode, direction):
             targetNodeName = currentPlayer.currentNode['direction']
             if targetNodeName in builtNodes:
                 currentPlayer.setNode(targetNodeName)
+
+commands = {
+    "move": {
+        "object": MoveCommand(),
+    }
+}

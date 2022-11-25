@@ -10,6 +10,9 @@ class Node(StateMachine, dict):
 
     name: str
 
+    locked: bool = False
+    lockedReason: str = "This location is locked!"
+
     def __getattribute__(self, __name: str) -> Any:
         return super().__getattribute__(__name)
     
@@ -22,3 +25,9 @@ class Node(StateMachine, dict):
 builtNodes: dict[str, Node] = {}
 
 builtNodes['origin'] = Node('origin')
+
+builtNodes['house'] = Node('House')
+
+
+builtNodes['origin'].north = 'house'
+builtNodes['house'].south = 'origin'
