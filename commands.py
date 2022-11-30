@@ -19,21 +19,35 @@ class Command():
         raise Exception("NOT IMPLEMENTED")
 
 class MoveCommand(Command):
-    redundantWords: list[str] = ['to', 'direction']
+    redundantWords: list[str] = ['towards', 'to', 'the', 'me', 'myself']; #LONGER WORDS SHOULD ALWAYS GO FIRST!
 
     def __init__(self):
-        super().__init__("move", ["walk"])
+        super().__init__("move", ["walk", "go"])
 
     def transformer(self, s: str):
         for word in self.redundantWords:
             s = s.replace(word, '')
         s = s.replace('  ', ' '); #replace double spaces that word removal might cause with single spaces.
+        
+        words = s.split(' ');
+
+        index = 0;
+        for word in words:
+            
+            if word == 'move' or word in self.aliases:
+                break;
+        
+            index += 1;
+
+        target = (' '.join(words[index + 1:len(words)])).strip();
+        print(f"{target} is where they will move")
 
     def callback(self, direction: str):
-        if hasattr(currentPlayer.currentNode, direction):
-            targetNodeName = currentPlayer.currentNode['direction']
-            if targetNodeName in builtNodes:
-                currentPlayer.setNode(targetNodeName)
+        if direction in currentPlayer.currentNode and direction in builtNodes:
+            currentPlayer.setNode(direction);
+            return f"You walk to {direction}";
+        else:
+            return f"{direction} is not a valid location!"
 
 commands = {
     "move": {

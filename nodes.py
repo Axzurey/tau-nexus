@@ -1,12 +1,9 @@
+from __future__ import annotations
 from typing import Any
 from statemachine import StateMachine, State
 
 class Node(StateMachine, dict):
-    north: str | None
-    east: str | None
-    south: str | None
-    west: str | None
-    #the above are name identifiers for nodes. Optionally, they can be None
+    connects: list[str] #str will be a name identifier for a node
 
     name: str
 
@@ -21,6 +18,7 @@ class Node(StateMachine, dict):
         Node links aren't set in the constructor. Do not forget to set them explicitly via property annotation afterwards.
         """
         self.name = name
+        self.connects = []
 
 builtNodes: dict[str, Node] = {}
 
@@ -29,5 +27,5 @@ builtNodes['origin'] = Node('origin')
 builtNodes['house'] = Node('House')
 
 
-builtNodes['origin'].north = 'house'
-builtNodes['house'].south = 'origin'
+builtNodes['origin'].connects.append('house')
+builtNodes['house'].connects.append('origin')
