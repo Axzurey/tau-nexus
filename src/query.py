@@ -2,7 +2,7 @@ from playerNode import currentPlayer
 from commands import commands
 
 def query_options():
-    actions: list[str] = []
+    actions: list[str] = ['search']
     lockedDirections: dict[str, str] = {} #index is the cardinal direction, value is the reason it is locked
 
     if len(currentPlayer.currentNode.connects) >= 1:

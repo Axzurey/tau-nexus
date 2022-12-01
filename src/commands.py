@@ -19,7 +19,11 @@ class Command():
         raise Exception("NOT IMPLEMENTED")
 
 class MoveCommand(Command):
-    redundantWords: list[str] = ['towards', 'to', 'the', 'me', 'myself']; #LONGER WORDS SHOULD ALWAYS GO FIRST!
+    """
+    syntax: move to [location]
+    paraphrasing is allowed, however only for specific words.
+    """
+    redundantWords: list[str] = ['towards', 'to', 'the', 'me', 'myself', 'my']; #LONGER WORDS SHOULD ALWAYS GO FIRST!
 
     def __init__(self):
         super().__init__("move", ["walk", "go"])
@@ -40,17 +44,41 @@ class MoveCommand(Command):
             index += 1;
 
         target = (' '.join(words[index + 1:len(words)])).strip();
-        print(f"{target} is where they will move")
+        
+        res = self.callback(target);
+        print(res);
 
     def callback(self, direction: str):
-        if direction in currentPlayer.currentNode and direction in builtNodes:
+        if direction in currentPlayer.currentNode.connects and direction in builtNodes:
             currentPlayer.setNode(direction);
-            return f"You walk to {direction}";
+            return f"You hastily walk to the {direction}";
         else:
             return f"{direction} is not a valid location!"
+
+class SearchCommand(Command):
+    """
+    syntax: search
+    no additional words are needed.
+    """
+    redundantWords: list[str] = [];
+
+    def __init__(self):
+        super().__init__("search", []);
+
+    def transformer(self, _s: str):
+        res = self.callback();
+        
+    def callback(self):
+        node = currentPlayer.currentNode;
+
+        node.search();
+        
 
 commands = {
     "move": {
         "object": MoveCommand(),
+    },
+    "search": {
+        "object": SearchCommand(),
     }
 }
