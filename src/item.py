@@ -31,8 +31,8 @@ class WeaponItem(Item):
         self.damageRange = mathf.NumberRange(params["damageMin"], params['damageMax']);
         self.critMultiplier = params['critMultiplier'];
 
-    def calculateDamage(self, isCrit: float):
-        damage = self.damageRange.calculateRandom() * self.critMultiplier if isCrit else 1;
+    def calculateDamage(self):
+        damage = self.damageRange.calculateRandom()
 
         return damage;
 
@@ -51,9 +51,9 @@ allItems = {
             "critMultiplier": 1.5,
         })
     },
-    "health potion": {
+    "elixir of life": {
         "type": "status",
-        "create": lambda: StatusItem("health potion")
+        "create": lambda: StatusItem("elixir of life")
     },
     "mana potion": {
         "type": "status",

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TypedDict
 from nodes import Node, builtNodes
-from item import Item
+from item import Item, WeaponItem, allItems
 
 class PlayerStats(TypedDict):
     health: float;
@@ -16,6 +16,8 @@ class PlayerNode():
     stats: PlayerStats;
 
     items: list[Item] = [];
+
+    equippedWeapon: WeaponItem = allItems['basic sword']['create']()
 
     def __init__(self, startingNode: Node):
         self.currentNode = startingNode

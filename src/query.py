@@ -1,15 +1,20 @@
 from playerNode import currentPlayer
 from commands import commands
+import time
 
 def query_options():
     actions: list[str] = ['search']
-    lockedDirections: dict[str, str] = {} #index is the cardinal direction, value is the reason it is locked
 
     if len(currentPlayer.currentNode.connects) >= 1:
         actions.append('move') #if they have somewhere to move to, let them know.
 
     outputMessage = """actions
 ------"""
+
+    q = currentPlayer.currentNode.willEncounter();
+
+    if q:
+        actions.append('battle');
 
     for action in actions:
         outputMessage += f"""
@@ -19,11 +24,16 @@ def query_options():
         print("You have no actions. This shouldn't happen, therefore the program will now exit")
         exit()
 
+    if 'battle' in actions:
+        print(f"You encounter a(n) {q} What would you like to do?")
+
     query = input(outputMessage)
 
     spl = query.split(' ');
 
     selectedCommand = 'NONE';
+
+    query = q if q else query;
 
     i = -1;
     for word in spl:
@@ -38,4 +48,6 @@ def query_options():
         return query_options()
     else:
         commands[selectedCommand]['object'].transformer(query);
+
+    time.sleep(1.5); #give em some time before the next iteration
     
