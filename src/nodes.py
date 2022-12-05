@@ -89,7 +89,7 @@ builtNodes: dict[str, Node] = {}
 builtNodes['origin'] = Node('Origin', {
     "searchChances": {
         "elixir of life": 100,
-        "mana potion": 100,
+        "elixir of brutality": 100,
         "basic sword": 100
     },
     "maxSearches": 3,
@@ -104,7 +104,7 @@ builtNodes['origin'] = Node('Origin', {
 builtNodes['house'] = Node('House', {
     "searchChances": {
         "elixir of life": 10,
-        "mana potion": 10,
+        "elixir of brutality": 10,
         "basic sword": .2
     },
     "maxSearches": 3,

@@ -8,6 +8,7 @@ class PlayerStats(TypedDict):
     maxHealth: float;
     critRate: float;
     critMultiplier: float;
+    strength: float;
 
 class PlayerNode():
 
@@ -25,7 +26,8 @@ class PlayerNode():
             "health": 100,
             "maxHealth": 100,
             "critRate": 10,
-            "critMultiplier": 1.5
+            "critMultiplier": 1.5,
+            "strength": 0
         }
 
     def setNode(self, node: str):
