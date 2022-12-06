@@ -1,6 +1,6 @@
 from typing import Any, Literal
-from item import ItemType, StatusItem
-from mathf import isInt, parseNumberStr
+from item import ItemType, StatusItem, Item
+from mathf import dictMergeInto, isInt, manyNotIn, manySatisfy, mapToDict, parseNumberStr, printinfo, println, sequenceCountByProperty
 from playerNode import currentPlayer
 from nodes import builtNodes
 from enemy import Enemy, enemies
@@ -52,7 +52,7 @@ class MoveCommand(Command):
         target = (' '.join(words[index + 1:len(words)])).strip();
         
         res = self.callback(target);
-        print(res);
+        println(res);
 
     def callback(self, direction: str):
         if direction in currentPlayer.currentNode.connects and direction in builtNodes:
@@ -90,7 +90,7 @@ class BattleCommand(Command):
 
     def battleLoop(self, enemyName: str):
 
-        print(f"You have now entered battle with {enemyName}")
+        printinfo(f"You have now entered battle with {enemyName}")
 
         enemy = enemies[enemyName]['create']();
 
@@ -101,7 +101,7 @@ class BattleCommand(Command):
         while (True):
             turn += 1;
 
-            print(f"::Turn {turn}::");
+            printinfo(f"::Turn {turn}::");
 
             self.battleRound(enemy);
             time.sleep(.5);
@@ -125,7 +125,7 @@ class BattleCommand(Command):
 
             enemy.takeDamage(trueDamage);
 
-            print(f"You attack {enemy.name} for {trueDamage} damage!")
+            printinfo(f"You attack {enemy.name} for {trueDamage} damage!")
 
             time.sleep(1)
 
@@ -154,7 +154,7 @@ class BattleCommand(Command):
                 index += 1;
 
             if index == len(words) - 1:
-                print("Unable to understand what you mean, please try again.");
+                printinfo("Unable to understand what you mean, please try again.");
                 return self.battleRound(enemy);
 
             (pas, res) = parseNumberStr(words[index + 1]);
@@ -178,7 +178,7 @@ class BattleCommand(Command):
 
                 if s == target.replace(' ', ''):
                     if item.type != ItemType.STATUS:
-                        print("You can't use that item here because it isn't consumable!");
+                        printinfo("You can't use that item here because it isn't consumable!");
                         return self.battleRound(enemy);
 
                     itemMatches.append(item); #type: ignore
@@ -186,7 +186,7 @@ class BattleCommand(Command):
                     return;
 
             if count > len(itemMatches):
-                print(f"You don't have that many {target}, you only have {len(itemMatches)}!");
+                printinfo(f"You don't have that many {target}, you only have {len(itemMatches)}!");
                 return self.battleRound(enemy);
 
             for _ in range(count):
@@ -194,7 +194,7 @@ class BattleCommand(Command):
 
                 currentPlayer.items.remove(p);
 
-                #YOU ARE HEREEEEEEEEEEEEEEEEEE FINISH THISSSSSSS MAKE INV COMMAND TO CHECK IF IT'S REALLY GONE
+                #TODO
 
         container = {
             "attack": {
@@ -204,6 +204,10 @@ class BattleCommand(Command):
             "use": {
                 "aliases": [],
                 "callback": use
+            },
+            "check": {
+                "aliases": ["inventory", "inv"],
+                "callback": lambda: print(commands["inventory"]["object"].callback())
             }
         }
 
@@ -213,10 +217,33 @@ class BattleCommand(Command):
                     container[action]['callback']()
                     return;
 
-        print("That isn't a valid action. Try again.");
+        printinfo("That isn't a valid action. Try again.");
 
         return self.battleRound(enemy);
 
+class InventoryCommand(Command):
+    redundantWords: list[str] = [];
+
+    def __init__(self):
+        super().__init__("search", []);
+
+    def transformer(self, _s: str):
+        res = self.callback();
+        println(res);
+        
+    def callback(self):
+        consumables = manySatisfy(currentPlayer.items, lambda item: item.type == ItemType.STATUS);
+        weapons = manySatisfy(currentPlayer.items, lambda item: item.type == ItemType.STATUS);
+        countedConsumables = sequenceCountByProperty(consumables, "name");
+        countedWeapons = mapToDict([w.name for w in weapons], lambda _: 1); #doesn't need to stack so we'll just map em
+
+        countedAll = dictMergeInto({}, [countedConsumables, countedWeapons]);
+
+        z = [f"<#> {countedAll[k]}x {k}" for k in countedAll];
+
+        s = "\n".join(z);
+
+        return s;
 
 commands = {
     "move": {
@@ -226,6 +253,9 @@ commands = {
         "object": SearchCommand(),
     },
     "battle": {
-        "object": BattleCommand()
+        "object": BattleCommand(),
+    },
+    "inventory": {
+        "object": InventoryCommand(),
     }
 }

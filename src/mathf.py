@@ -1,5 +1,11 @@
 import random;
-from typing_extensions import Literal
+from collections.abc import Sequence, Callable
+from typing import Any;
+from typing_extensions import Literal, TypeVar;
+
+T = TypeVar("T");
+K = TypeVar("K");
+V = TypeVar("V");
 
 def lerp(a: float, b: float, t: float) -> float:
     return a + (b - a) * t;
@@ -9,6 +15,60 @@ def isInt(i: str):
         return int(i);
     except Exception:
         return False;
+
+def dictMergeInto(dict0: dict[K, T], dicts: list[dict[K, T]], overrideKeys: bool = False) -> dict[K, T]:
+    """
+    Joins keys from all dictionaries in dicts into dict0
+    """
+    for dict1 in dicts:
+        for k in dict1:
+            if k not in dict0 or overrideKeys:
+                dict0[k] = dict1[k];
+
+    return dict0;
+
+def sequenceCountByProperty(seq: Sequence, by: K) -> dict[K, int]:
+    counter = {};
+
+    for ind in seq:
+        if ind[by] in counter:
+            counter[ind[by]] += 1;
+        else:
+            counter[ind[by]] = 1;
+
+    return counter;
+
+def mapToDict(seq: Sequence[T], fillValue: Callable[[T], V]) -> dict[T, V]:
+    d = {};
+
+    for item in seq:
+        d[item] = fillValue(item);
+
+    return d;
+
+def manyNotIn(seq0: Sequence[T], seq1: Sequence[T]) -> list[T]:
+    notIn = [];
+
+    for s in seq0:
+        if s not in seq1:
+            notIn.append(s);
+
+    return notIn;
+
+def manySatisfy(seq: Sequence[T], check: Callable[[T], bool]) -> list[T]:
+    satisfy = [];
+
+    for s in seq:
+        if check(s):
+            satisfy.append(s);
+
+    return satisfy;
+
+def isSuffixedWithN(word: str) -> bool:
+    """
+    returns whether the given string should use "a" or "an"
+    """
+    return True if word[0] in ['a', 'e', 'i', 'o', 'u'] else False;
 
 def parseNumberStr(n: str) -> tuple[Literal[True], int] | tuple[Literal[False], str]:
     """
@@ -90,3 +150,9 @@ class NumberRange():
 
     def calculateRandom(self) -> float:
         return lerp(self.min, self.max, random.random()); #since random.randrange doesn't include endpoint. This is more complete i guess.
+
+def println(s: int | float | str):
+    print("> " + str(s));
+
+def printinfo(s: int | float | str):
+    print("<!> " + str(s));

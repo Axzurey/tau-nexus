@@ -4,6 +4,8 @@ from typing import TypedDict
 from item import Item, allItems
 import time
 
+from mathf import isSuffixedWithN, printinfo
+
 class NodeParams(TypedDict):
     
     searchChances: dict[str, float]; #chances are calculated individually
@@ -47,19 +49,17 @@ class Node():
             if c < cmt:
                 return enemy;
 
-        print(c, cmt)
-
         raise Exception(f"[ILLEGAL STATE EXCEPTION] Sums of chances on node {self.name} do not sum up to 100%");
 
     def search(self):
 
         from playerNode import currentPlayer
 
-        if self.areaSearches == self.params['maxSearches']: print("You can not search this area any more!"); return;
+        if self.areaSearches == self.params['maxSearches']: printinfo("You can not search this area any more!"); return;
 
         time.sleep(1);
 
-        if self.searchedItems >= self.params["maxSearchedItems"]: print("You can't find anything else, there is probably nothing left here"); return;
+        if self.searchedItems >= self.params["maxSearchedItems"]: printinfo("You can't find anything else, there is probably nothing left here"); return;
         
         self.areaSearches += 1;
         
@@ -80,7 +80,7 @@ class Node():
 
         currentPlayer.items.extend(out);
 
-        print("You rummage through the area and find " + ", ".join([f"a {out[i].name}" if i < len(out) - 1 else f"and a {out[i].name}" for i in range(len(out))]));
+        printinfo("You rummage through the area and find " + ", ".join([f"""a{"n " if isSuffixedWithN(out[i].name) else " "}{out[i].name}" if i < len(out) - 1 else f"and a {out[i].name}""" for i in range(len(out))]));
 
         self.searchedItems += len(out);
 

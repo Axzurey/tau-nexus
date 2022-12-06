@@ -1,3 +1,5 @@
+import os
+from mathf import isSuffixedWithN, printinfo
 from playerNode import currentPlayer
 from commands import commands
 import time
@@ -8,26 +10,25 @@ def query_options():
     if len(currentPlayer.currentNode.connects) >= 1:
         actions.append('move') #if they have somewhere to move to, let them know.
 
-    outputMessage = """actions
-------"""
-
     q = currentPlayer.currentNode.willEncounter();
+
+    print("-" * os.get_terminal_size().columns);
 
     if q:
         actions.append('battle');
-
-    for action in actions:
-        outputMessage += f"""
-[{action}]{"(available directions): " + ", ".join(currentPlayer.currentNode.connects) if action == 'move' else ''}
-"""
+    
     if len(actions) == 0:
-        print("You have no actions. This shouldn't happen, therefore the program will now exit")
+        printinfo("You have no actions. This shouldn't happen, therefore the program will now exit")
         exit()
 
-    if 'battle' in actions:
-        print(f"You encounter a(n) {q} What would you like to do?")
+    if 'move' in actions:
+        printinfo(f"Your fairy informs you of your surroundings: " + ", ".join([f"""{"an" if isSuffixedWithN(node) else "a"} {node}""" for node in currentPlayer.currentNode.connects]))
+    if 'battle' in actions and q:
+        printinfo(f"""You encounter a{"n " if isSuffixedWithN(q) else " "}{q} What would you like to do?""")
 
-    query = input(outputMessage)
+    outputMessage = "\n".join([f"[{action}]" for action in actions]) + "\n>>  ";
+
+    query = input(outputMessage);
 
     spl = query.split(' ');
 
@@ -44,7 +45,7 @@ def query_options():
                 break;
 
     if selectedCommand == 'NONE':
-        print("It appears you have not selected a valid action. Please think it through and try again.");
+        printinfo("It appears you have not selected a valid action. Please think it through and try again.");
         return query_options()
     else:
         commands[selectedCommand]['object'].transformer(query);
