@@ -36,7 +36,7 @@ class Node():
 
     def willEncounter(self) -> str | None:
         p = random.randrange(0, 100);
-        if self.params["encounterChance"] > p: return; #they won't encounter anything!
+        if p > self.params["encounterChance"]: return; #they won't encounter anything!
 
         enemies = self.params['possibleEnemies'];
 
@@ -78,9 +78,11 @@ class Node():
 
             out.append(item);
 
-        currentPlayer.items.extend(out);
-
-        printinfo("You rummage through the area and find " + ", ".join([f"""a{"n " if isSuffixedWithN(out[i].name) else " "}{out[i].name}""" "" if i < len(out) - 1 else f"""and a{"n " if isSuffixedWithN(out[i].name) else " "}{out[i].name}""" for i in range(len(out))]));
+        if len(out) == 0:
+            printinfo("You search the area and find nothing");
+        else:
+            currentPlayer.items.extend(out);
+            printinfo("You rummage through the area and find " + ", ".join([f"""a{"n " if isSuffixedWithN(out[i].name) else " "}{out[i].name}""" "" if i < len(out) - 1 else f"""and a{"n " if isSuffixedWithN(out[i].name) else " "}{out[i].name}""" for i in range(len(out))]));
 
         self.searchedItems += len(out);
 
@@ -103,8 +105,8 @@ builtNodes['origin'] = Node('Origin', {
 
 builtNodes['house'] = Node('House', {
     "searchChances": {
-        "elixir of life": 10,
-        "elixir of brutality": 10,
+        "elixir of life": 100,
+        "elixir of brutality": 100,
         "basic sword": .2
     },
     "maxSearches": 3,

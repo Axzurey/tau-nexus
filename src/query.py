@@ -24,7 +24,7 @@ def query_options():
     if 'move' in actions:
         printinfo(f"Your fairy informs you of your surroundings: " + ", ".join([f"""{"an" if isSuffixedWithN(node) else "a"} {node}""" for node in currentPlayer.currentNode.connects]))
     if 'battle' in actions and qWillEncounter:
-        printinfo(f"""You encounter a{"n " if isSuffixedWithN(qWillEncounter) else " "}{qWillEncounter} What would you like to do?""")
+        printinfo(f"""You encounter a{"n " if isSuffixedWithN(qWillEncounter) else " "}{qWillEncounter}. What would you like to do?""")
 
     outputMessage = "\n".join([f"[{action}]" for action in actions]) + "\n>>  ";
 

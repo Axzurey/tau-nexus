@@ -1,3 +1,4 @@
+import os
 from typing import Any, Literal
 from item import ItemType, StatusItem, Item
 from mathf import dictMergeInto, isInt, manyNotIn, manySatisfy, mapToDict, parseNumberStr, printinfo, println, sequenceCountByProperty
@@ -50,8 +51,6 @@ class MoveCommand(Command):
             index += 1;
 
         target = (' '.join(words[index + 1:len(words)])).strip();
-
-        print(words, target)
         
         res = self.callback(target);
         println(res);
@@ -103,12 +102,21 @@ class BattleCommand(Command):
         while (True):
             turn += 1;
 
-            printinfo(f"::Turn {turn}::");
+            time.sleep(.25);
 
-            self.battleRound(enemy);
-            time.sleep(.5);
+            t = f"-----Turn {turn}-----";
+
+            print(t + "-" * (os.get_terminal_size().columns - len(t)));
+
+            res = self.battleRound(enemy);
+
+            if res == "END":
+                return;
     
     def battleRound(self, enemy: Enemy):
+
+        time.sleep(.5);
+    
         q = input("""What would you like to do?
 [attack the enemy]
 [use an item]
@@ -117,17 +125,25 @@ class BattleCommand(Command):
 >>  """);
 
         def attack():
-            doesCrit = currentPlayer.stats["critRate"] < random.randrange(0, 100)
+            doesCrit = random.randrange(0, 100) < currentPlayer.stats["critRate"]
             
             critDamageMul = currentPlayer.equippedWeapon.critMultiplier + currentPlayer.stats["critMultiplier"];
 
             baseDamage = currentPlayer.equippedWeapon.calculateDamage() + currentPlayer.stats['strength'];
 
-            trueDamage = baseDamage * critDamageMul if doesCrit else 1;
+            trueDamage = baseDamage * (critDamageMul if doesCrit else 1);
 
             enemy.takeDamage(trueDamage);
 
-            printinfo(f"You attack {enemy.name} for {trueDamage} damage!")
+            printinfo(f"You attack the {enemy.name} for {trueDamage} damage!");
+
+            time.sleep(.5);
+
+            if enemy.isDead():
+                printinfo(f"You killed the {enemy.name}, the battle is now over!");
+                return "END"
+            else:
+                printinfo(f"Your fairy informs you that the {enemy.name} now has {enemy.stats['health']} health");
 
             time.sleep(1)
 
@@ -182,21 +198,55 @@ class BattleCommand(Command):
                     if item.type != ItemType.STATUS:
                         printinfo("You can't use that item here because it isn't consumable!");
                         return self.battleRound(enemy);
+                    else:
+                        itemMatches.append(item); #type: ignore  OK, add it.
+                else:
+                    for subname in item.also:
+                        s = subname;
+                        for word in r:
+                            s = s.replace(word, '');
+                        s = s.replace(' ', '');
 
-                    itemMatches.append(item); #type: ignore
+                        if s == target.replace(' ', ''):
+                            if item.type != ItemType.STATUS:
+                                printinfo("You can't use that item here because it isn't consumable!");
+                                return self.battleRound(enemy);
+                            else:
+                                itemMatches.append(item); #type: ignore  OK, add it.
 
-                    return;
+
+
+                    
 
             if count > len(itemMatches):
                 printinfo(f"You don't have that many {target}, you only have {len(itemMatches)}!");
                 return self.battleRound(enemy);
 
+            time.sleep(.25);
+            print([v.name for v in itemMatches], [v.name for v in currentPlayer.items])
+
             for _ in range(count):
                 p = itemMatches.pop();
 
-                currentPlayer.items.remove(p);
+                print(p.name)
+
+                currentPlayer.items.remove(p); #seems to just be removing the first 2 items
 
                 #TODO
+                """WTF
+                ['elixir of life', 'elixir of life'] ['elixir of life', 'elixir of brutality', 'basic sword', 'elixir of life', 'elixir of brutality']
+                elixir of life
+                elixir of life
+                <!> You use 2 elixirs of life.
+                ['basic sword', 'elixir of life', 'elixir of brutality']
+                """
+                
+
+
+            printinfo(f"You use {count} {target}.");
+            print([v.name for v in currentPlayer.items])
+
+            time.sleep(.25);
 
         container = {
             "attack": {
