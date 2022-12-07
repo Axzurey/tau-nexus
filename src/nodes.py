@@ -80,7 +80,7 @@ class Node():
 
         currentPlayer.items.extend(out);
 
-        printinfo("You rummage through the area and find " + ", ".join([f"""a{"n " if isSuffixedWithN(out[i].name) else " "}{out[i].name}" if i < len(out) - 1 else f"and a {out[i].name}""" for i in range(len(out))]));
+        printinfo("You rummage through the area and find " + ", ".join([f"""a{"n " if isSuffixedWithN(out[i].name) else " "}{out[i].name}""" "" if i < len(out) - 1 else f"""and a{"n " if isSuffixedWithN(out[i].name) else " "}{out[i].name}""" for i in range(len(out))]));
 
         self.searchedItems += len(out);
 

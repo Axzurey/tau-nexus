@@ -50,6 +50,8 @@ class MoveCommand(Command):
             index += 1;
 
         target = (' '.join(words[index + 1:len(words)])).strip();
+
+        print(words, target)
         
         res = self.callback(target);
         println(res);
@@ -112,7 +114,7 @@ class BattleCommand(Command):
 [use an item]
 [check your inventory]
 [run away]
-""");
+>>  """);
 
         def attack():
             doesCrit = currentPlayer.stats["critRate"] < random.randrange(0, 100)
@@ -243,7 +245,7 @@ class InventoryCommand(Command):
 
         s = "\n".join(z);
 
-        return s;
+        return "<!> You have no items!" if len(countedAll) == 0 else s;
 
 commands = {
     "move": {

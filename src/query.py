@@ -10,11 +10,11 @@ def query_options():
     if len(currentPlayer.currentNode.connects) >= 1:
         actions.append('move') #if they have somewhere to move to, let them know.
 
-    q = currentPlayer.currentNode.willEncounter();
+    qWillEncounter = currentPlayer.currentNode.willEncounter();
 
     print("-" * os.get_terminal_size().columns);
 
-    if q:
+    if qWillEncounter:
         actions.append('battle');
     
     if len(actions) == 0:
@@ -23,8 +23,8 @@ def query_options():
 
     if 'move' in actions:
         printinfo(f"Your fairy informs you of your surroundings: " + ", ".join([f"""{"an" if isSuffixedWithN(node) else "a"} {node}""" for node in currentPlayer.currentNode.connects]))
-    if 'battle' in actions and q:
-        printinfo(f"""You encounter a{"n " if isSuffixedWithN(q) else " "}{q} What would you like to do?""")
+    if 'battle' in actions and qWillEncounter:
+        printinfo(f"""You encounter a{"n " if isSuffixedWithN(qWillEncounter) else " "}{qWillEncounter} What would you like to do?""")
 
     outputMessage = "\n".join([f"[{action}]" for action in actions]) + "\n>>  ";
 
@@ -33,8 +33,6 @@ def query_options():
     spl = query.split(' ');
 
     selectedCommand = 'NONE';
-
-    query = q if q else query;
 
     i = -1;
     for word in spl:
@@ -47,6 +45,8 @@ def query_options():
     if selectedCommand == 'NONE':
         printinfo("It appears you have not selected a valid action. Please think it through and try again.");
         return query_options()
+    elif selectedCommand == "battle":
+        commands[selectedCommand]['object'].transformer(qWillEncounter);
     else:
         commands[selectedCommand]['object'].transformer(query);
 
