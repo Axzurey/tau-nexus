@@ -30,6 +30,12 @@ class PlayerNode():
             "strength": 0
         }
 
+    def takeDamage(self, damage: float):
+        self.stats['health'] -= damage;
+    
+    def isDead(self):
+        return self.stats['health'] <= 0;
+
     def setNode(self, node: str):
         if node in builtNodes:
             self.currentNode = builtNodes[node]

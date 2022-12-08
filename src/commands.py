@@ -1,7 +1,8 @@
+import math
 import os
 from typing import Any, Literal
 from item import ItemType, StatusItem, Item
-from mathf import dictMergeInto, isInt, manyNotIn, manySatisfy, mapToDict, parseNumberStr, printinfo, println, sequenceCountByProperty
+from mathf import dictMergeInto, isInt, manyNotIn, manySatisfy, mapToDict, parseNumberStr, printinfo, println, sequenceCount
 from playerNode import currentPlayer
 from nodes import builtNodes
 from enemy import Enemy, enemies
@@ -29,7 +30,7 @@ class MoveCommand(Command):
     syntax: move to [location]
     paraphrasing is allowed, however only for specific words.
     """
-    redundantWords: list[str] = ['towards', 'myself', 'node', 'back', 'to', 'the', 'me', 'my']; #LONGER WORDS SHOULD ALWAYS GO FIRST!
+    redundantWords: list[str] = ['towards', 'myself', 'node', 'back', 'to', 'the', 'me', 'my', 'an']; #LONGER WORDS SHOULD ALWAYS GO FIRST!
 
     def __init__(self):
         super().__init__("move", ["walk", "go"])
@@ -122,6 +123,7 @@ class BattleCommand(Command):
 [use an item]
 [check your inventory]
 [run away]
+[inspect the enemy and yourself]
 >>  """);
 
         def attack():
@@ -131,7 +133,7 @@ class BattleCommand(Command):
 
             baseDamage = currentPlayer.equippedWeapon.calculateDamage() + currentPlayer.stats['strength'];
 
-            trueDamage = baseDamage * (critDamageMul if doesCrit else 1);
+            trueDamage = round(baseDamage * (critDamageMul if doesCrit else 1));
 
             enemy.takeDamage(trueDamage);
 
@@ -223,30 +225,43 @@ class BattleCommand(Command):
                 return self.battleRound(enemy);
 
             time.sleep(.25);
-            print([v.name for v in itemMatches], [v.name for v in currentPlayer.items])
 
             for _ in range(count):
                 p = itemMatches.pop();
 
-                print(p.name)
 
-                currentPlayer.items.remove(p); #seems to just be removing the first 2 items
-
-                #TODO
-                """WTF
-                ['elixir of life', 'elixir of life'] ['elixir of life', 'elixir of brutality', 'basic sword', 'elixir of life', 'elixir of brutality']
-                elixir of life
-                elixir of life
-                <!> You use 2 elixirs of life.
-                ['basic sword', 'elixir of life', 'elixir of brutality']
-                """
-                
-
+                currentPlayer.items.remove(p);
 
             printinfo(f"You use {count} {target}.");
-            print([v.name for v in currentPlayer.items])
 
             time.sleep(.25);
+
+        def flee():
+            printinfo("You promptly flee the scene to a random node");
+            currentPlayer.setNode(random.choice(currentPlayer.currentNode.connects));
+            return "END";
+
+        def enemyAttack():
+            doesCrit = random.randrange(0, 100) < enemy.stats["critRate"]
+            
+            critDamageMul = enemy.stats["critMultiplier"];
+
+            baseDamage = enemy.stats["attackRange"].calculateRandom();
+
+            trueDamage = round(baseDamage * (critDamageMul if doesCrit else 1));
+
+            currentPlayer.takeDamage(trueDamage);
+
+            printinfo(f"The {enemy.name} attacks you for {trueDamage}");
+
+            if currentPlayer.isDead():
+                printinfo(f"GAME OVER: You died to a {enemy.name}");
+                exit(); #the game ends. need I say more?
+
+        def inspect():
+            printinfo(f"Your fairy informs you that the {enemy.name} has {enemy.stats['health']} health.");
+            printinfo(f"Your fairy informs you that the you have {currentPlayer.stats['health']} health.");
+            
 
         container = {
             "attack": {
@@ -260,14 +275,26 @@ class BattleCommand(Command):
             "check": {
                 "aliases": ["inventory", "inv"],
                 "callback": lambda: print(commands["inventory"]["object"].callback())
+            },
+            "run": {
+                "aliases": ["escape", "flee"],
+                "callback": flee
+            },
+            "inspect": {
+                "aliases": ['view'],
+                "callback": inspect
             }
         }
 
         for substr in q.split(' '):
             for action in container:
                 if substr.lower() == action or substr.lower() in container[action]['aliases']:
-                    container[action]['callback']()
-                    return;
+                    out = container[action]['callback']();
+                    if out == "END":
+                        return out;
+                    
+                    return enemyAttack();
+                    
 
         printinfo("That isn't a valid action. Try again.");
 
@@ -286,7 +313,7 @@ class InventoryCommand(Command):
     def callback(self):
         consumables = manySatisfy(currentPlayer.items, lambda item: item.type == ItemType.STATUS);
         weapons = manySatisfy(currentPlayer.items, lambda item: item.type == ItemType.STATUS);
-        countedConsumables = sequenceCountByProperty(consumables, "name");
+        countedConsumables = sequenceCount([v.name for v in consumables]);
         countedWeapons = mapToDict([w.name for w in weapons], lambda _: 1); #doesn't need to stack so we'll just map em
 
         countedAll = dictMergeInto({}, [countedConsumables, countedWeapons]);

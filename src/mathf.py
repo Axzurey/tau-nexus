@@ -27,14 +27,14 @@ def dictMergeInto(dict0: dict[K, T], dicts: list[dict[K, T]], overrideKeys: bool
 
     return dict0;
 
-def sequenceCountByProperty(seq: Sequence, by: K) -> dict[K, int]:
+def sequenceCount(seq: Sequence[K]) -> dict[K, int]:
     counter = {};
 
     for ind in seq:
-        if ind[by] in counter:
-            counter[ind[by]] += 1;
+        if ind in counter:
+            counter[ind] += 1;
         else:
-            counter[ind[by]] = 1;
+            counter[ind] = 1;
 
     return counter;
 
