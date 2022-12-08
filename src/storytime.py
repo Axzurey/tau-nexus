@@ -12,13 +12,13 @@ class storyLine():
     @staticmethod
     def loadFromFile(filePath: str):
         content: list[textView] = [];
-        with open(filePath, 'r') as f:
+        with open(filePath, 'r', encoding="utf8") as f:
 
             i = 0;
-            while True:
+            for line in f.readlines():
                 i += 1;
                 try:
-                    line = f.readline();
+
                     if len(line) == 0 or line.isspace(): continue;
 
                     rex = re.compile(r"\[[+-]?\d+(?:\.\d+)?\]").search(line);
@@ -26,14 +26,15 @@ class storyLine():
                     if not rex:
                         raise Exception(f"Error occured at line {i} of storybook {filePath}: Line numbering is malformed");
 
-                    length = int(rex.group(0));
-                    text = line[rex.start():];
+                    length = float(rex.group(0).replace('[', '').replace(']', ''));
+                    text = f"> {line[rex.end():].strip()}"
 
                     content.append((text, length));
 
                 except Exception as e:
                     raise Exception(f"Error occured at line {i} of storybook {filePath}: {str(e)}");
-        f.close() #TODO
+
+        f.close()
         return storyLine(content);
 
 

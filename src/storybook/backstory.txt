@@ -1,59 +1,59 @@
-[1] You are outside the convenience store, about to walk home from a long day of work.
-[1] The moon is out, but the skies are still void of light.
-[1.2] Visibility is low, that’s a given, but oddly you feel a sense of foreboding.
-[1] You look to your right and your left.
-[1.5] “All clear”, you whisper to yourself. The coast is clear, so you begin walking.
-[1] Step by step, foot by foot, you creep across the street.
-[1] However out of the corner of your eyes, you see the dreaded white light.
-[1] A truck comes barreling towards you.
-[1] You try to jump out of the way but your actions are in vain.
-[1.2] The truck plows through you, leaving your body mangled on the cold, hard concrete.
-[1] You can't see anything, pure nothingness.
+[2] You are outside the convenience store, about to walk home from a long day of work.
+[2] The moon is out, but the skies are still void of light.
+[2.2] Visibility is low, that’s a given, but oddly you feel a sense of foreboding.
+[2] You look to your right and your left.
+[2.5] “All clear”, you whisper to yourself. The coast is clear, so you begin walking.
+[2] Step by step, foot by foot, you creep across the street.
+[2] However out of the corner of your eyes, you see the dreaded white light.
+[2] A truck comes barreling towards you.
+[2] You try to jump out of the way but your actions are in vain.
+[2.2] The truck plows through you, leaving your body mangled on the cold, hard concrete.
+[2] You can't see anything, pure nothingness.
 
-[.5] …
-[.5] …
-[.5] …
+[1] …
+[1] …
+[1] …
 
-[1] You awake, in an unfamiliar place.
-[1] You look around. It looks nothing like the world you are used to.
-[1.5] Confused, you stand up and walk around. Your body feels lighter; unlike how you used to be.
-[1] It’s an unexpected change but a welcome one.
-[1] You walk for what feels like forever before coming across a head. Yes, a head.
-[1] One not attached to a body.
-[1] You shriek at the top of your lungs before stumbling back.
-[1.25] You look around frantically and surely enough, you find the owner of the head.
-[1] The body of a man seemingly in his late 20s.
+[2] You awake, in an unfamiliar place.
+[2] You look around. It looks nothing like the world you are used to.
+[2.5] Confused, you stand up and walk around. Your body feels lighter; unlike how you used to be.
+[2] It’s an unexpected change but a welcome one.
+[2] You walk for what feels like forever before coming across a head. Yes, a head.
+[2] One not attached to a body.
+[2] You shriek at the top of your lungs before stumbling back.
+[2.25] You look around frantically and surely enough, you find the owner of the head.
+[2] The body of a man seemingly in his late 20s.
 
-[1] Before you can regather your composure you hear rustling in the bushes.
-[1] “Who’s there?”, you call out.
-[1] A slight pause, before you then hear a maniacal laugh from the figure.
-[1.5] “Me? You don’t need to know about me. Though, you should be more concerned about yourself”.
-[1] You look down, and surely enough there is a gaping hole through your chest.
-[1] You start to panic. Fear envelops your mind, blurring your vision.
-[1] The figure moves out of the bushes and inches closer till they are right in front of you.
-[1] They kneel to match your eye level and they but one phrase: “You’re in my domain now”.
-[1.5] You don’t even have time to contemplate this before darkness embraces you once more.
+[2] Before you can regather your composure you hear rustling in the bushes.
+[2] “Who’s there?”, you call out.
+[2] A slight pause, before you then hear a maniacal laugh from the figure.
+[2.5] “Me? You don’t need to know about me. Though, you should be more concerned about yourself”.
+[2] You look down, and surely enough there is a gaping hole through your chest.
+[2] You start to panic. Fear envelops your mind, blurring your vision.
+[2] The figure moves out of the bushes and inches closer till they are right in front of you.
+[2] They kneel to match your eye level and they but one phrase: “You’re in my domain now”.
+[2.5] You don’t even have time to contemplate this before darkness embraces you once more.
 
-[.5] ...
-[.5] ...
-[.5] ...
+[1] ...
+[1] ...
+[1] ...
 
-[1] You awake once more, lost and confused.
-[1.3] Everything’s blurry. You try to refocus your eyes, but to no avail.
-[1] “Hello, young one”, a female voice says to you.
-[1.7] “Poor thing, you must be so confused; but do not fret, for everything will be going your way soon enough”.
-[1] What does she mean? You feel your eyes getting heavier.
-[1] Slowy, slowly they shut until once more, all you can see is darkness.
+[2] You awake once more, lost and confused.
+[2.3] Everything’s blurry. You try to refocus your eyes, but to no avail.
+[2] “Hello, young one”, a female voice says to you.
+[2.7] “Poor thing, you must be so confused; but do not fret, for everything will be going your way soon enough”.
+[2] What does she mean? You feel your eyes getting heavier.
+[2] Slowy, slowly they shut until once more, all you can see is darkness.
 
-[.5] ...
-[.5] ...
-[.5] ...
+[1] ...
+[1] ...
+[1] ...
 
-[1] You wake up once more, breathing heavily.
-[1] Your lungs feel like they’re filled with concrete and you struggle to get up.
-[1] Once you are up you feel a jolt through your body.
-[1] You feel like you’ve been here before.
-[1] Your thoughts become clearer and you seem to recall what you are sure that you’ve never experienced before.
-[1] You feel confident; confident that you know what you’re doing.
+[2] You wake up once more, breathing heavily.
+[2] Your lungs feel like they’re filled with concrete and you struggle to get up.
+[2] Once you are up you feel a jolt through your body.
+[2] You feel like you’ve been here before.
+[2] Your thoughts become clearer and you seem to recall what you are sure that you’ve never experienced before.
+[2] You feel confident; confident that you know what you’re doing.
 
-[1] First things first, let’s find a city.
+[2] First things first, let’s find a city.

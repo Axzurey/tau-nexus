@@ -1,7 +1,7 @@
 import random;
 from collections.abc import Sequence, Callable
-from typing import Any;
-from typing_extensions import Literal, TypeVar;
+from typing_extensions import Literal;
+from typing import TypeVar
 
 T = TypeVar("T");
 K = TypeVar("K");
