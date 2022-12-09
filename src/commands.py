@@ -19,7 +19,7 @@ class Command():
         self.name = name
         self.aliases = aliases
 
-    def transformer(self):
+    def transformer(self, _s: str):
         raise Exception("NOT IMPLEMENTED!")
 
     def callback(self):
@@ -113,6 +113,27 @@ class BattleCommand(Command):
 
             if res == "END":
                 return;
+
+            def enemyAttack():
+                doesCrit = random.randrange(0, 100) < enemy.stats["critRate"]
+                
+                critDamageMul = enemy.stats["critMultiplier"];
+
+                baseDamage = enemy.stats["attackRange"].calculateRandom();
+
+                trueDamage = round(baseDamage * (critDamageMul if doesCrit else 1));
+
+                currentPlayer.takeDamage(trueDamage);
+
+                printinfo(f"The {enemy.name} attacks you for {trueDamage} damage");
+
+                if currentPlayer.isDead():
+                    printinfo(f"GAME OVER: You died to a {enemy.name}");
+                    exit(); #the game ends. need I say more?
+                else:
+                    printinfo(f"You now have {currentPlayer.stats['health']} health left");
+                    #TODO
+
     
     def battleRound(self, enemy: Enemy):
 
@@ -143,6 +164,7 @@ class BattleCommand(Command):
 
             if enemy.isDead():
                 printinfo(f"You killed the {enemy.name}, the battle is now over!");
+                currentPlayer.currentNode.currentEnemy = None;
                 return "END"
             else:
                 printinfo(f"Your fairy informs you that the {enemy.name} now has {enemy.stats['health']} health");
@@ -238,29 +260,15 @@ class BattleCommand(Command):
 
         def flee():
             printinfo("You promptly flee the scene to a random node");
-            currentPlayer.setNode(random.choice(currentPlayer.currentNode.connects));
+            currentPlayer.setNode(random.choice(currentPlayer.currentNode.connects))
+            time.sleep(.5)
             return "END";
 
-        def enemyAttack():
-            doesCrit = random.randrange(0, 100) < enemy.stats["critRate"]
-            
-            critDamageMul = enemy.stats["critMultiplier"];
-
-            baseDamage = enemy.stats["attackRange"].calculateRandom();
-
-            trueDamage = round(baseDamage * (critDamageMul if doesCrit else 1));
-
-            currentPlayer.takeDamage(trueDamage);
-
-            printinfo(f"The {enemy.name} attacks you for {trueDamage}");
-
-            if currentPlayer.isDead():
-                printinfo(f"GAME OVER: You died to a {enemy.name}");
-                exit(); #the game ends. need I say more?
-
         def inspect():
-            printinfo(f"Your fairy informs you that the {enemy.name} has {enemy.stats['health']} health.");
-            printinfo(f"Your fairy informs you that the you have {currentPlayer.stats['health']} health.");
+            time.sleep(.25)
+            printinfo(f"Your fairy informs you that the {enemy.name} has {enemy.stats['health']} health.")
+            time.sleep(.25)
+            printinfo(f"Your fairy informs you that the you have {currentPlayer.stats['health']} health.")
             
 
         container = {
@@ -274,7 +282,7 @@ class BattleCommand(Command):
             },
             "check": {
                 "aliases": ["inventory", "inv"],
-                "callback": lambda: print(commands["inventory"]["object"].callback())
+                "callback": lambda: print(commands["inventory"]["object"].callback(True)) #type: ignore > It doesn't know.
             },
             "run": {
                 "aliases": ["escape", "flee"],
@@ -304,15 +312,15 @@ class InventoryCommand(Command):
     redundantWords: list[str] = [];
 
     def __init__(self):
-        super().__init__("search", []);
+        super().__init__("inventory", ["inv", "bag"]);
 
     def transformer(self, _s: str):
         res = self.callback();
-        println(res);
+        print(res);
         
-    def callback(self):
+    def callback(self, consumableOnly: bool = False):
         consumables = manySatisfy(currentPlayer.items, lambda item: item.type == ItemType.STATUS);
-        weapons = manySatisfy(currentPlayer.items, lambda item: item.type == ItemType.STATUS);
+        weapons = manySatisfy(currentPlayer.items, lambda item: item.type == ItemType.WEAPON) if not consumableOnly else [];
         countedConsumables = sequenceCount([v.name for v in consumables]);
         countedWeapons = mapToDict([w.name for w in weapons], lambda _: 1); #doesn't need to stack so we'll just map em
 
@@ -324,7 +332,157 @@ class InventoryCommand(Command):
 
         return "<!> You have no items!" if len(countedAll) == 0 else s;
 
-commands = {
+class EquipCommand(Command):
+
+    redundantWords: list[str] = ['my', 'weapon', 'to', 'from', 'the', 'an'];
+
+    def __init__(self):
+        super().__init__("equip", ["switch"])
+
+    def transformer(self, s: str):
+        s = s.lower().strip();
+        for word in self.redundantWords:
+            s = s.replace(word, '')
+        s = s.replace('  ', ' '); #replace double spaces that word removal might cause with single spaces.
+        
+        words = s.split(' ');
+
+        index = 0;
+        for word in words:
+            
+            if word == 'equip' or word in self.aliases:
+                break;
+        
+            index += 1;
+
+        target = (' '.join(words[index + 1:len(words)])).strip();
+        
+        self.callback(target);
+
+    def callback(self, target: str):
+        for item in currentPlayer.items:
+            s = item.name;
+            for word in self.redundantWords:
+                s = s.replace(word, '');
+            s = s.replace(' ', '');
+
+            if s == target.replace(' ', ''):
+                if item.type != ItemType.WEAPON:
+                    printinfo("You can't use consumable items outside of battle");
+                    return;
+                else:
+                    currentPlayer.items.append(currentPlayer.equippedWeapon); # Move their current weapon to their inventory
+                    currentPlayer.equippedWeapon = item; #type: ignore > We know this must be a WeaponItem because of the above clause
+                    currentPlayer.items.remove(item); # It should no longer be in their inventory
+                    printinfo(f"Successfully equipped {target}");
+                    return;
+            else:
+                for subname in item.also:
+                    s = subname;
+                    for word in self.redundantWords:
+                        s = s.replace(word, '');
+                    s = s.replace(' ', '');
+
+                    if s == target.replace(' ', ''):
+                        if item.type != ItemType.STATUS:
+                            printinfo("You can't use consumable items outside of battle");
+                            return
+                        else:
+                            currentPlayer.items.append(currentPlayer.equippedWeapon); # Move their current weapon to their inventory
+                            currentPlayer.equippedWeapon = item; #type: ignore > We know this must be a WeaponItem because of the above clause
+                            currentPlayer.items.remove(item); # It should no longer be in their inventory
+                            printinfo(f"Successfully equipped {target}");
+                            return;
+
+        printinfo(f"You don't have any {target}")
+
+class StatusCommand(Command):
+    def __init__(self):
+        super().__init__("status", ["self"]);
+
+    def transformer(self, _s):
+
+        outS = '\n'.join([f'<#> {i}: {currentPlayer.stats[i]}' for i in currentPlayer.stats])
+
+        printinfo(f"Your fairy calculates your status...");
+        time.sleep(.25);
+        print(outS);
+
+class InspectCommand(Command):
+    def __init__(self):
+        super().__init__("inspect", []);
+
+    def transformer(self, _s):
+
+        outS = f"""<#> Name: {currentPlayer.equippedWeapon.name}
+<#> Attack Damage (min, max): [{currentPlayer.equippedWeapon.damageRange.min}, {currentPlayer.equippedWeapon.damageRange.max}]
+<#> Crit Multiplier: {currentPlayer.equippedWeapon.critMultiplier}""";
+
+        printinfo(f"Your fairy appraises your weapon...");
+        time.sleep(.25);
+        print(outS);
+
+class HelpCommand(Command):
+    redundantWords: list[str] = ["with", "my", "me", "the", "command", "to"];
+
+    def __init__(self):
+        super().__init__("help", ["assist"]);
+
+    def transformer(self, s):
+        s = s.lower().strip();
+        for word in self.redundantWords:
+            s = s.replace(word, '');
+        s = s.replace('  ', ' '); #replace double spaces that word removal might cause with single spaces.
+        
+        words = s.split(' ');
+
+        index = 0;
+        for word in words:
+            
+            if word == 'help' or word in self.aliases:
+                break;
+        
+            index += 1;
+
+        target = (' '.join(words[index + 1:len(words)])).strip();
+
+        targetCommand: str | None = None;
+        
+        for command in commands:
+            cmd = commands[command]['object'];
+            if command == target or target in cmd.aliases:
+                targetCommand = command;
+
+        if target != '' and not targetCommand:
+            printinfo(f"Your fairy doesn't understand what {target} is.");
+        elif targetCommand:
+            printinfo(commandHelpCenter[targetCommand]);
+        else:
+            outS = '\n'.join([f"<#> {commandHelpCenter[i]}" for i in commandHelpCenter]);
+            print(outS);
+
+
+
+commandHelpCenter: dict[str, str] = {
+    "move": """Allows you to move to an adjacent node.
+Example usage: \"move to the forest\"""",
+    "search": """Allows you to search your current node for items.
+Example usage: \"search the area\"""",
+    "battle": """When you encounter an enemy on a node, you can use this command to engage in battle.
+Example usage: \"battle the enemy\"""",
+    "inventory": """Allows you to view the items in your inventory.
+Example usage: \"check my inventory\"""",
+    "equip": """This command changes your equipped weapon.
+Example usage: \"equip the sword of swords\"""",
+    "status": """Displays your status.
+Example usage: \"What's my status?\"""",
+    "inspect": """Displays your weapon's stats
+Example usage: \"inspect my weapon\"""",
+    "help": """Brings up this message.
+Example usage: \"help me\"""",
+}
+
+commands: dict[str, dict[str, Command]] = {
     "move": {
         "object": MoveCommand(),
     },
@@ -336,5 +494,17 @@ commands = {
     },
     "inventory": {
         "object": InventoryCommand(),
+    },
+    "equip": {
+        "object": EquipCommand(),
+    },
+    "status": {
+        "object": StatusCommand(),
+    },
+    "inspect": {
+        "object": InspectCommand(),
+    },
+    "help": {
+        "object": HelpCommand(),
     }
 }

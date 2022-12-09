@@ -1,6 +1,7 @@
 from __future__ import annotations
 import random
 from typing import TypedDict
+from enemy import Enemy
 from item import Item, allItems
 import time
 
@@ -25,6 +26,8 @@ class Node():
     areaSearches: int = 0;
     searchedItems: int = 0;
     params: NodeParams;
+
+    currentEnemy: str | None;
     
     def __init__(self, name: str, params: NodeParams):
         """
@@ -33,8 +36,12 @@ class Node():
         self.name = name
         self.connects = []
         self.params = params;
+        self.currentEnemy = None;
 
     def willEncounter(self) -> str | None:
+
+        if self.currentEnemy: return self.currentEnemy;
+
         p = random.randrange(0, 100);
         if p > self.params["encounterChance"]: return; #they won't encounter anything!
 
@@ -47,6 +54,7 @@ class Node():
         for enemy in enemies:
             cmt += enemies[enemy]
             if c < cmt:
+                self.currentEnemy = enemy;
                 return enemy;
 
         raise Exception(f"[ILLEGAL STATE EXCEPTION] Sums of chances on node {self.name} do not sum up to 100%");
@@ -112,9 +120,9 @@ builtNodes['house'] = Node('House', {
     "maxSearches": 3,
     "maxSearchedItems": 3,
     "possibleEnemies": {
-        "small slime": 90,
-        "big slime": 9.9,
-        "very big slime": .1,
+        "small slime": 50,
+        "big slime": 49,
+        "very big slime": 1,
     },
     "encounterChance": 100
 })

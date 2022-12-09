@@ -18,7 +18,9 @@ class PlayerNode():
 
     items: list[Item] = [];
 
-    equippedWeapon: WeaponItem = allItems['basic sword']['create']()
+    equippedWeapon: WeaponItem = allItems['basic sword']['create']();
+
+    enemiesDefeated: int = 0;
 
     def __init__(self, startingNode: Node):
         self.currentNode = startingNode

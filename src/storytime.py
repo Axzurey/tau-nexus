@@ -1,9 +1,16 @@
-from typing_extensions import TypedDict;
+from typing import Callable;
 import time;
 import re;
 
 textView = tuple[str, float];
 
+def queryAndCheck(q: str, check: Callable[[str], bool], badInput: Callable[[str], str]) -> str:
+    while True:
+        i = input(q);
+        if check(i):
+            return i;
+        else:
+            print(badInput(i));
 
 class storyLine():
     

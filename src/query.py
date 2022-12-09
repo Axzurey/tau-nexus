@@ -5,7 +5,7 @@ from commands import commands
 import time
 
 def query_options():
-    actions: list[str] = ['search']
+    actions: list[str] = ['search', 'inventory', 'equip', 'status']
 
     if len(currentPlayer.currentNode.connects) >= 1:
         actions.append('move') #if they have somewhere to move to, let them know.
@@ -46,7 +46,10 @@ def query_options():
         printinfo("It appears you have not selected a valid action. Please think it through and try again.");
         return query_options()
     elif selectedCommand == "battle":
-        commands[selectedCommand]['object'].transformer(qWillEncounter);
+        if qWillEncounter:
+            commands[selectedCommand]['object'].transformer(qWillEncounter);
+        else:
+            printinfo("There's nothing there! are you trying to fight your demons?");
     else:
         commands[selectedCommand]['object'].transformer(query);
 
