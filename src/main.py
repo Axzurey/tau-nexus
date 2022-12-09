@@ -1,7 +1,7 @@
 from query import query_options
-import storytime;
+import stories;
 
-storytime.storyLine.loadFromFile('src/storybook/backstory.txt').startStory()
+stories.introStory.startStory()
 
 while True:
     """
