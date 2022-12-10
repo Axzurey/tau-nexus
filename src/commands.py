@@ -2,7 +2,7 @@ import math
 import os
 from typing import Any, Literal
 from item import ItemType, StatusItem, Item
-from mathf import dictMergeInto, isInt, manyNotIn, manySatisfy, mapToDict, parseNumberStr, printinfo, println, sequenceCount
+from mathf import dictMergeInto, isInt, manySatisfy, mapToDict, parseNumberStr, printinfo, println, sequenceCount
 from playerNode import currentPlayer
 from nodes import builtNodes
 from enemy import Enemy, enemies
@@ -19,7 +19,7 @@ class Command():
         self.name = name
         self.aliases = aliases
 
-    def transformer(self, _s: str):
+    def transformer(self, _s: str) -> bool:
         raise Exception("NOT IMPLEMENTED!")
 
     def callback(self):
@@ -53,17 +53,19 @@ class MoveCommand(Command):
 
         target = (' '.join(words[index + 1:len(words)])).strip();
         
-        res = self.callback(target);
-        println(res);
+        return self.callback(target);
 
     def callback(self, direction: str):
         if direction in currentPlayer.currentNode.connects and direction in builtNodes:
             currentPlayer.setNode(direction);
-            return f"You hastily walk to the {direction}";
+            printinfo("You hastily walk to the {direction}");
+            return "OK";
         elif direction in builtNodes:
-            return f"You can not reach {direction} from here";
+            printinfo(f"You can not reach {direction} from here");
+            return "BAD";
         else:
-            return f"{direction} is not a valid location!";
+            printinfo(f"{direction} is not a valid location!");
+            return "BAD";
 
 class SearchCommand(Command):
     """
@@ -81,7 +83,7 @@ class SearchCommand(Command):
     def callback(self):
         node = currentPlayer.currentNode;
 
-        node.search();
+        return node.search();
 
 class BattleCommand(Command):
     def __init__(self):
@@ -89,6 +91,25 @@ class BattleCommand(Command):
 
     def transformer(self, enemyName: str):
         self.battleLoop(enemyName);
+
+    def enemyAttack(self, enemy: Enemy):
+        doesCrit = random.randrange(0, 100) < enemy.stats["critRate"]
+        
+        critDamageMul = enemy.stats["critMultiplier"];
+
+        baseDamage = enemy.stats["attackRange"].calculateRandom();
+
+        trueDamage = round(baseDamage * (critDamageMul if doesCrit else 1));
+
+        currentPlayer.takeDamage(trueDamage);
+
+        printinfo(f"The {enemy.name} attacks you for {trueDamage} damage");
+
+        if currentPlayer.isDead():
+            printinfo(f"GAME OVER: You died to a {enemy.name}");
+            exit(); #the game ends. need I say more?
+        else:
+            printinfo(f"You now have {currentPlayer.stats['health']} health left");
 
     def battleLoop(self, enemyName: str):
 
@@ -113,26 +134,8 @@ class BattleCommand(Command):
 
             if res == "END":
                 return;
-
-            def enemyAttack():
-                doesCrit = random.randrange(0, 100) < enemy.stats["critRate"]
-                
-                critDamageMul = enemy.stats["critMultiplier"];
-
-                baseDamage = enemy.stats["attackRange"].calculateRandom();
-
-                trueDamage = round(baseDamage * (critDamageMul if doesCrit else 1));
-
-                currentPlayer.takeDamage(trueDamage);
-
-                printinfo(f"The {enemy.name} attacks you for {trueDamage} damage");
-
-                if currentPlayer.isDead():
-                    printinfo(f"GAME OVER: You died to a {enemy.name}");
-                    exit(); #the game ends. need I say more?
-                else:
-                    printinfo(f"You now have {currentPlayer.stats['health']} health left");
-                    #TODO
+            else:
+                self.enemyAttack(enemy);
 
     
     def battleRound(self, enemy: Enemy):
@@ -300,9 +303,6 @@ class BattleCommand(Command):
                     out = container[action]['callback']();
                     if out == "END":
                         return out;
-                    
-                    return enemyAttack();
-                    
 
         printinfo("That isn't a valid action. Try again.");
 
@@ -316,7 +316,7 @@ class InventoryCommand(Command):
 
     def transformer(self, _s: str):
         res = self.callback();
-        print(res);
+        return "OK"
         
     def callback(self, consumableOnly: bool = False):
         consumables = manySatisfy(currentPlayer.items, lambda item: item.type == ItemType.STATUS);
@@ -356,8 +356,12 @@ class EquipCommand(Command):
             index += 1;
 
         target = (' '.join(words[index + 1:len(words)])).strip();
+
+        if target == '':
+            printinfo("You have not selected a valid item.");
+            return "BAD";
         
-        self.callback(target);
+        return self.callback(target);
 
     def callback(self, target: str):
         for item in currentPlayer.items:
@@ -369,13 +373,13 @@ class EquipCommand(Command):
             if s == target.replace(' ', ''):
                 if item.type != ItemType.WEAPON:
                     printinfo("You can't use consumable items outside of battle");
-                    return;
+                    return "BAD";
                 else:
                     currentPlayer.items.append(currentPlayer.equippedWeapon); # Move their current weapon to their inventory
                     currentPlayer.equippedWeapon = item; #type: ignore > We know this must be a WeaponItem because of the above clause
                     currentPlayer.items.remove(item); # It should no longer be in their inventory
                     printinfo(f"Successfully equipped {target}");
-                    return;
+                    return "OK";
             else:
                 for subname in item.also:
                     s = subname;
@@ -386,15 +390,16 @@ class EquipCommand(Command):
                     if s == target.replace(' ', ''):
                         if item.type != ItemType.STATUS:
                             printinfo("You can't use consumable items outside of battle");
-                            return
+                            return "BAD"
                         else:
                             currentPlayer.items.append(currentPlayer.equippedWeapon); # Move their current weapon to their inventory
                             currentPlayer.equippedWeapon = item; #type: ignore > We know this must be a WeaponItem because of the above clause
                             currentPlayer.items.remove(item); # It should no longer be in their inventory
                             printinfo(f"Successfully equipped {target}");
-                            return;
+                            return "OK"
 
         printinfo(f"You don't have any {target}")
+        return "BAD"
 
 class StatusCommand(Command):
     def __init__(self):
@@ -452,15 +457,16 @@ class HelpCommand(Command):
             cmd = commands[command]['object'];
             if command == target or target in cmd.aliases:
                 targetCommand = command;
+                break;
 
         if target != '' and not targetCommand:
             printinfo(f"Your fairy doesn't understand what {target} is.");
+            return "BAD"
         elif targetCommand:
             printinfo(commandHelpCenter[targetCommand]);
         else:
-            outS = '\n'.join([f"<#> {commandHelpCenter[i]}" for i in commandHelpCenter]);
+            outS = '\n'.join([f"<#> {i}: {commandHelpCenter[i]}" for i in commandHelpCenter]);
             print(outS);
-
 
 
 commandHelpCenter: dict[str, str] = {

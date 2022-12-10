@@ -63,11 +63,11 @@ class Node():
 
         from playerNode import currentPlayer
 
-        if self.areaSearches == self.params['maxSearches']: printinfo("You can not search this area any more!"); return;
+        if self.areaSearches == self.params['maxSearches']: printinfo("You can not search this area any more!"); return "BAD";
 
         time.sleep(1);
 
-        if self.searchedItems >= self.params["maxSearchedItems"]: printinfo("You can't find anything else, there is probably nothing left here"); return;
+        if self.searchedItems >= self.params["maxSearchedItems"]: printinfo("You can't find anything else, there is probably nothing left here"); return "BAD";
         
         self.areaSearches += 1;
         

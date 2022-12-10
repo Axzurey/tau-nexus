@@ -12,4 +12,4 @@ while True:
     This is the main loop. It will run indefinitely.
     """
 
-    query_options()
+    query_options(True)
