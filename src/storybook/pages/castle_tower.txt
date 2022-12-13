@@ -1,0 +1,4 @@
+[1] You visit the highest tower of the castle.
+[1] You hear a laugh from all round you.
+[0.75] "You will perish".
+[0.75] I sure hope not.

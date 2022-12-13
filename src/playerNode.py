@@ -32,6 +32,8 @@ class PlayerNode():
             "strength": 0
         }
 
+        self.currentNode.visited = True;
+
     def takeDamage(self, damage: float):
         self.stats['health'] -= damage;
     
@@ -40,7 +42,7 @@ class PlayerNode():
 
     def setNode(self, node: str):
         if node in builtNodes:
-            self.currentNode = builtNodes[node]
+            self.currentNode = builtNodes[node];
         else:
             raise Exception(f"Node {node} does not exist!")
 

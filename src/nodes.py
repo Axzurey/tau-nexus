@@ -28,8 +28,14 @@ class Node():
     params: NodeParams;
 
     currentEnemy: str | None;
+
+    onlyOneBattle: bool = False;
+
+    visited: bool = False;
+
+    firstTimeStoryId: str | None;
     
-    def __init__(self, name: str, params: NodeParams):
+    def __init__(self, name: str, params: NodeParams, firstTimeStoryId: str | None = None, onlyOneBattle: bool | None = None):
         """
         Node links aren't set in the constructor. Do not forget to set them explicitly via property annotation afterwards.
         """
@@ -37,6 +43,8 @@ class Node():
         self.connects = []
         self.params = params;
         self.currentEnemy = None;
+        self.firstTimeStoryId = firstTimeStoryId;
+        self.onlyOneBattle = onlyOneBattle or False;
 
     def willEncounter(self) -> str | None:
 
@@ -96,7 +104,7 @@ class Node():
 
 builtNodes: dict[str, Node] = {}
 
-builtNodes['origin'] = Node('Origin', {
+builtNodes['grass patch'] = Node('grass patch', {
     "searchChances": {
         "elixir of life": 100,
         "elixir of brutality": 100,
@@ -109,9 +117,9 @@ builtNodes['origin'] = Node('Origin', {
         "wolf": 50
     },
     "encounterChance": 10,
-})
+});
 
-builtNodes['house'] = Node('House', {
+builtNodes['house'] = Node('house', {
     "searchChances": {
         "elixir of life": 100,
         "elixir of brutality": 100,
@@ -124,8 +132,105 @@ builtNodes['house'] = Node('House', {
         "big slime": 49,
         "very big slime": 1,
     },
-    "encounterChance": 100
-})
+    "encounterChance": 100,
+}, "bad_smell_house");
+
+builtNodes['city'] = Node('city', {
+    "searchChances": {
+        "elixir of life": 100,
+        "elixir of brutality": 100,
+        "basic sword": .2
+    },
+    "maxSearches": 3,
+    "maxSearchedItems": 3,
+    "possibleEnemies": {
+        "small slime": 50,
+        "big slime": 49,
+        "very big slime": 1,
+    },
+    "encounterChance": 100,
+}, "city_ambient");
+
+builtNodes['castle gates'] = Node('castle gates', {
+    "searchChances": {
+        "elixir of life": 100,
+        "elixir of brutality": 100,
+        "basic sword": .2
+    },
+    "maxSearches": 3,
+    "maxSearchedItems": 3,
+    "possibleEnemies": {
+        "small slime": 50,
+        "big slime": 49,
+        "very big slime": 1,
+    },
+    "encounterChance": 100,
+}, "castle_gates");
+
+builtNodes['castle tower'] = Node('castle tower', {
+    "searchChances": {
+        "elixir of life": 100,
+        "elixir of brutality": 100,
+        "basic sword": .2
+    },
+    "maxSearches": 3,
+    "maxSearchedItems": 3,
+    "possibleEnemies": {
+        "small slime": 50,
+        "big slime": 49,
+        "very big slime": 1,
+    },
+    "encounterChance": 100,
+}, "castle_tower", True);
+
+builtNodes['stable'] = Node('stable', {
+    "searchChances": {
+        "elixir of life": 100,
+        "elixir of brutality": 100,
+        "basic sword": .2
+    },
+    "maxSearches": 3,
+    "maxSearchedItems": 3,
+    "possibleEnemies": {
+        "small slime": 50,
+        "big slime": 49,
+        "very big slime": 1,
+    },
+    "encounterChance": 100,
+}, "very_bad_stable");
+
+builtNodes['southern forest'] = Node('southern forest', {
+    "searchChances": {
+        "elixir of life": 100,
+        "elixir of brutality": 100,
+        "basic sword": .2
+    },
+    "maxSearches": 3,
+    "maxSearchedItems": 3,
+    "possibleEnemies": {
+        "slightly angry nymph": 40,
+        "very angry nymph": 40,
+        "nymph bearing murderous intent": 20,
+    },
+    "encounterChance": 50,
+}, "beautiful forest");
+
+builtNodes['northern forest'] = Node('northern forest', {
+    "searchChances": {
+        "finger of the fae": 10,
+        "toe of the fae": 10,
+        "heart of the fae": 10,
+    },
+    "maxSearches": 3,
+    "maxSearchedItems": 3,
+    "possibleEnemies": {
+        "dark elf": 30,
+        "elf": 50,
+        "elf with mental health issues": 19,
+        "elf that aims to become the next demon king": 1
+    },
+    "encounterChance": 100,
+}, "dangerous_forest");
 
 
 builtNodes['origin'].connects.append('house')

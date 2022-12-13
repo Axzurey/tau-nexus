@@ -1,6 +1,8 @@
 from typing import Callable;
 import time;
-import re;
+import re
+
+from mathf import printStory;
 
 textView = tuple[str, float];
 
@@ -50,5 +52,5 @@ class storyLine():
 
     def startStory(self):
         for view in self.content:
-            print(view[0]);
+            printStory(view[0], view[1] / 2);
             time.sleep(view[1]);

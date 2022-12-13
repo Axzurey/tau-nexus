@@ -184,3 +184,14 @@ def printinfo(s: int | float | str, timeLapse: float = 1):
     print(f"{Style.RESET_ALL}");
 
     flushInput();
+
+def printStory(s: str | int | float, timeLapse: float = 1):
+    c = str(s);
+
+    print(f"{Fore.GREEN}", end="")
+
+    for char in c:
+        print(char, flush=True, end="");
+        time.sleep(timeLapse / len(c));
+
+    print(f"{Style.RESET_ALL}");

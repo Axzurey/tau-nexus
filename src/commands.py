@@ -8,6 +8,7 @@ from enemy import Enemy, enemies
 import time
 from colorama import Fore, Style
 import random
+import stories
 
 Direction = Literal['north'] | Literal['south'] | Literal['east'] | Literal['west']
 
@@ -59,6 +60,10 @@ class MoveCommand(Command):
         if direction in currentPlayer.currentNode.connects and direction in builtNodes:
             currentPlayer.setNode(direction);
             printinfo(f"You hastily walk to the {direction}");
+            if not currentPlayer.currentNode.visited:
+                currentPlayer.currentNode.visited = True;
+                if currentPlayer.currentNode.firstTimeStoryId:
+                    stories.pages[currentPlayer.currentNode.firstTimeStoryId].startStory();
             return "OK";
         elif direction in builtNodes:
             printinfo(f"You can not reach {direction} from here");
@@ -276,6 +281,7 @@ class BattleCommand(Command):
             print(f"{Fore.MAGENTA}", end="");
             print(commands["inventory"]["object"].callback(True)); #type: ignore > It doesn't know.
             print(f"{Style.RESET_ALL}", end="");
+            return "PASS";
 
         container = {
             "attack": {
