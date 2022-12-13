@@ -1,11 +1,11 @@
 import os
-from mathf import isSuffixedWithN, printinfo
+from mathf import isSuffixedWithN, printinfo, qInput
 from playerNode import currentPlayer
 from commands import commands
 import time
 
 def query_options(firstPass: bool = False):
-    actions: list[str] = ['search', 'inventory', 'equip', 'status']
+    actions: list[str] = ['search', 'inventory', 'equip', 'status', 'exit']
 
     if len(currentPlayer.currentNode.connects) >= 1:
         actions.append('move') #if they have somewhere to move to, let them know.
@@ -28,9 +28,9 @@ def query_options(firstPass: bool = False):
 
     #outputMessage = "\n".join([f"[{action}]" for action in actions]) + "\n>>  ";
 
-    outputMessage = "What would you like to do?(input help for more information)\n>>  " if firstPass else ">>  ";
+    outputMessage = "What would you like to do?(input help for more information)" if firstPass else "";
 
-    query = input(outputMessage);
+    query = qInput(outputMessage, False if outputMessage == "" else True);
 
     spl = query.split(' ');
 
@@ -55,7 +55,7 @@ def query_options(firstPass: bool = False):
             printinfo("There's nothing there! are you trying to fight your demons?");
     else:
         o = commands[selectedCommand]['object'].transformer(query);
-        if o == "BAD":
+        if o == "BAD" or o == "CTN":
             return query_options()
 
     time.sleep(1.5); #give em some time before the next iteration

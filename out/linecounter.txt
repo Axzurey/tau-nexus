@@ -1,0 +1,42 @@
+===============================================================================
+EXTENSION NAME : linecounter
+EXTENSION VERSION : 0.2.7
+-------------------------------------------------------------------------------
+count time : 2022-12-13 10:04:02
+count workspace : c:\Users\343175691\Desktop\projects\strange~quark
+total files : 22
+total code lines : 885
+total comment lines : 25
+total blank lines : 293
+
+    statistics
+   |      extension|     total code|  total comment|    total blank|percent|
+   -------------------------------------------------------------------------
+   |               |              1|              0|              0|   0.11|
+   |            .py|            872|             25|            293|     99|
+   |            .md|              1|              0|              0|   0.11|
+   |           .txt|             11|              0|              0|    1.2|
+   -------------------------------------------------------------------------
+.gitignore, code is 1, comment is 0, blank is 0.
+readme.md, code is 1, comment is 0, blank is 0.
+src\__pycache__\commands.cpython-310.pyc, it is a binary file.
+src\__pycache__\enemy.cpython-310.pyc, it is a binary file.
+src\__pycache__\item.cpython-310.pyc, it is a binary file.
+src\__pycache__\mathf.cpython-310.pyc, it is a binary file.
+src\__pycache__\nodes.cpython-310.pyc, it is a binary file.
+src\__pycache__\playerNode.cpython-310.pyc, it is a binary file.
+src\__pycache__\query.cpython-310.pyc, it is a binary file.
+src\__pycache__\stories.cpython-310.pyc, it is a binary file.
+src\__pycache__\storytime.cpython-310.pyc, it is a binary file.
+src\commands.py, code is 373, comment is 17, blank is 135.
+src\enemy.py, code is 67, comment is 0, blank is 9.
+src\item.py, code is 73, comment is 0, blank is 24.
+src\main.py, code is 8, comment is 0, blank is 5.
+src\mathf.py, code is 138, comment is 1, blank is 39.
+src\nodes.py, code is 93, comment is 4, blank is 37.
+src\playerNode.py, code is 35, comment is 0, blank is 12.
+src\query.py, code is 45, comment is 3, blank is 15.
+src\stories.py, code is 2, comment is 0, blank is 1.
+src\storybook\backstory.txt, code is 11, comment is 0, blank is 0.
+src\storytime.py, code is 38, comment is 0, blank is 16.
+===============================================================================

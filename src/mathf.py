@@ -1,7 +1,9 @@
 import random;
+import time;
 from collections.abc import Sequence, Callable
 from typing_extensions import Literal;
 from typing import TypeVar
+from colorama import Fore, Style
 
 T = TypeVar("T");
 K = TypeVar("K");
@@ -151,8 +153,34 @@ class NumberRange():
     def calculateRandom(self) -> float:
         return lerp(self.min, self.max, random.random()); #since random.randrange doesn't include endpoint. This is more complete i guess.
 
-def println(s: int | float | str):
-    print("> " + str(s));
 
-def printinfo(s: int | float | str):
-    print("<!> " + str(s));
+def flushInput():
+    import msvcrt;
+    while msvcrt.kbhit():
+        msvcrt.getch();
+
+def qInput(text: str, newline: bool = True):
+    n = "\n";
+    return input(f"""{text}{n if newline else ""}{Fore.CYAN}>>  {Style.RESET_ALL}""");
+
+def println(s: int | float | str, timeLapse: float = 1):
+    c = "> " + str(s);
+
+    for char in c:
+        print(char, flush=True, end="");
+        time.sleep(timeLapse / len(c));
+    print("");
+    flushInput();
+
+def printinfo(s: int | float | str, timeLapse: float = 1):
+    c = "<!> " + str(s);
+
+    print(f"{Fore.YELLOW}", end="")
+
+    for char in c:
+        print(char, flush=True, end="");
+        time.sleep(timeLapse / len(c));
+
+    print(f"{Style.RESET_ALL}");
+
+    flushInput();

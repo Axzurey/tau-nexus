@@ -1,12 +1,12 @@
-import math
 import os
 from typing import Any, Literal
 from item import ItemType, StatusItem, Item
-from mathf import dictMergeInto, isInt, manySatisfy, mapToDict, parseNumberStr, printinfo, println, sequenceCount
+from mathf import dictMergeInto, isInt, manySatisfy, mapToDict, parseNumberStr, printinfo, println, qInput, sequenceCount
 from playerNode import currentPlayer
 from nodes import builtNodes
 from enemy import Enemy, enemies
 import time
+from colorama import Fore, Style
 import random
 
 Direction = Literal['north'] | Literal['south'] | Literal['east'] | Literal['west']
@@ -58,7 +58,7 @@ class MoveCommand(Command):
     def callback(self, direction: str):
         if direction in currentPlayer.currentNode.connects and direction in builtNodes:
             currentPlayer.setNode(direction);
-            printinfo("You hastily walk to the {direction}");
+            printinfo(f"You hastily walk to the {direction}");
             return "OK";
         elif direction in builtNodes:
             printinfo(f"You can not reach {direction} from here");
@@ -142,13 +142,12 @@ class BattleCommand(Command):
 
         time.sleep(.5);
     
-        q = input("""What would you like to do?
+        q = qInput("""What would you like to do?
 [attack the enemy]
 [use an item]
 [check your inventory]
 [run away]
-[inspect the enemy and yourself]
->>  """);
+[inspect the enemy and yourself]""");
 
         def attack():
             doesCrit = random.randrange(0, 100) < currentPlayer.stats["critRate"]
@@ -241,10 +240,6 @@ class BattleCommand(Command):
                             else:
                                 itemMatches.append(item); #type: ignore  OK, add it.
 
-
-
-                    
-
             if count > len(itemMatches):
                 printinfo(f"You don't have that many {target}, you only have {len(itemMatches)}!");
                 return self.battleRound(enemy);
@@ -254,12 +249,15 @@ class BattleCommand(Command):
             for _ in range(count):
                 p = itemMatches.pop();
 
+                p.affect();
 
                 currentPlayer.items.remove(p);
 
             printinfo(f"You use {count} {target}.");
 
             time.sleep(.25);
+
+            return "PASS";
 
         def flee():
             printinfo("You promptly flee the scene to a random node");
@@ -272,7 +270,12 @@ class BattleCommand(Command):
             printinfo(f"Your fairy informs you that the {enemy.name} has {enemy.stats['health']} health.")
             time.sleep(.25)
             printinfo(f"Your fairy informs you that the you have {currentPlayer.stats['health']} health.")
-            
+            return "PASS";
+        
+        def printCHK():
+            print(f"{Fore.MAGENTA}", end="");
+            print(commands["inventory"]["object"].callback(True)); #type: ignore > It doesn't know.
+            print(f"{Style.RESET_ALL}", end="");
 
         container = {
             "attack": {
@@ -285,7 +288,7 @@ class BattleCommand(Command):
             },
             "check": {
                 "aliases": ["inventory", "inv"],
-                "callback": lambda: print(commands["inventory"]["object"].callback(True)) #type: ignore > It doesn't know.
+                "callback": lambda: printCHK
             },
             "run": {
                 "aliases": ["escape", "flee"],
@@ -303,6 +306,9 @@ class BattleCommand(Command):
                     out = container[action]['callback']();
                     if out == "END":
                         return out;
+                    elif out == "PASS":
+                        return self.battleRound(enemy);
+                    return;
 
         printinfo("That isn't a valid action. Try again.");
 
@@ -316,7 +322,12 @@ class InventoryCommand(Command):
 
     def transformer(self, _s: str):
         res = self.callback();
-        return "OK"
+
+        print(f"{Fore.MAGENTA}", end="");
+        print(res); #type: ignore > It doesn't know.
+        print(f"{Style.RESET_ALL}", end="");
+        
+        return "CTN"
         
     def callback(self, consumableOnly: bool = False):
         consumables = manySatisfy(currentPlayer.items, lambda item: item.type == ItemType.STATUS);
@@ -379,7 +390,7 @@ class EquipCommand(Command):
                     currentPlayer.equippedWeapon = item; #type: ignore > We know this must be a WeaponItem because of the above clause
                     currentPlayer.items.remove(item); # It should no longer be in their inventory
                     printinfo(f"Successfully equipped {target}");
-                    return "OK";
+                    return "CTN";
             else:
                 for subname in item.also:
                     s = subname;
@@ -396,7 +407,7 @@ class EquipCommand(Command):
                             currentPlayer.equippedWeapon = item; #type: ignore > We know this must be a WeaponItem because of the above clause
                             currentPlayer.items.remove(item); # It should no longer be in their inventory
                             printinfo(f"Successfully equipped {target}");
-                            return "OK"
+                            return "CTN"
 
         printinfo(f"You don't have any {target}")
         return "BAD"
@@ -407,7 +418,9 @@ class StatusCommand(Command):
 
     def transformer(self, _s):
 
-        outS = '\n'.join([f'<#> {i}: {currentPlayer.stats[i]}' for i in currentPlayer.stats])
+        print(f"{Fore.MAGENTA}", end="");
+        outS = '\n'.join([f'{i}: {currentPlayer.stats[i]}' for i in currentPlayer.stats]);
+        print(f"{Style.RESET_ALL}", end="");
 
         printinfo(f"Your fairy calculates your status...");
         time.sleep(.25);
@@ -425,7 +438,17 @@ class InspectCommand(Command):
 
         printinfo(f"Your fairy appraises your weapon...");
         time.sleep(.25);
+        print(f"{Fore.MAGENTA}", end="");
         print(outS);
+        print(f"{Style.RESET_ALL}", end="");
+
+class QuitCommand(Command):
+    def __init__(self):
+        super().__init__("quit", ["exit()"]);
+
+    def transformer(self, _s: str):
+        printinfo("The program will now exit. Bye");
+        exit(0);
 
 class HelpCommand(Command):
     redundantWords: list[str] = ["with", "my", "me", "the", "command", "to"];
@@ -466,7 +489,9 @@ class HelpCommand(Command):
             printinfo(commandHelpCenter[targetCommand]);
         else:
             outS = '\n'.join([f"<#> {i}: {commandHelpCenter[i]}" for i in commandHelpCenter]);
+            print(f"{Fore.MAGENTA}", end="");
             print(outS);
+            print(f"{Style.RESET_ALL}", end="");
 
 
 commandHelpCenter: dict[str, str] = {
@@ -486,6 +511,8 @@ Example usage: \"What's my status?\"""",
 Example usage: \"inspect my weapon\"""",
     "help": """Brings up this message.
 Example usage: \"help me\"""",
+    "quit": """Exits the program.
+Example usage: You don't need one(I hope)"""
 }
 
 commands: dict[str, dict[str, Command]] = {
@@ -512,5 +539,8 @@ commands: dict[str, dict[str, Command]] = {
     },
     "help": {
         "object": HelpCommand(),
+    },
+    "quit": {
+        "object": QuitCommand()
     }
 }
