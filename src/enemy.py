@@ -72,5 +72,68 @@ enemies = {
             "critRate": 12,
             "critMultiplier": 1.5,
         })
-    }
+    },
+    "slightly angry nymph": {
+        "create": lambda: Enemy("slightly angry nymph", {
+            "health": 100,
+            "maxHealth": 100,
+            "attackRange": mathf.NumberRange(15, 30),
+            "critRate": 5,
+            "critMultiplier": 1.25,
+        })
+    },
+    "very angry nymph": {
+        "create": lambda: Enemy("very angry nymph", {
+            "health": 120,
+            "maxHealth": 120,
+            "attackRange": mathf.NumberRange(25, 50),
+            "critRate": 12,
+            "critMultiplier": 1.5,
+        })
+    },
+    "nymph bearing murderous intent": {
+        "create": lambda: Enemy("nymph bearing murderous intent", {
+            "health": 150,
+            "maxHealth": 150,
+            "attackRange": mathf.NumberRange(40, 50),
+            "critRate": 12,
+            "critMultiplier": 1.25,
+        })
+    },
+    "elf": {
+        "create": lambda: Enemy("elf", {
+            "health": 100,
+            "maxHealth": 100,
+            "attackRange": mathf.NumberRange(15, 20),
+            "critRate": 51,
+            "critMultiplier": 1.25,
+        })
+    },
+    "dark elf": {
+        "create": lambda: Enemy("dark elf", {
+            "health": 120,
+            "maxHealth": 120,
+            "attackRange": mathf.NumberRange(25, 50),
+            "critRate": 12,
+            "critMultiplier": 1.5,
+        })
+    },
+    "elf that aims to become the next demon king": {
+        "create": lambda: Enemy("elf that aims to become the next demon king", {
+            "health": 150,
+            "maxHealth": 150,
+            "attackRange": mathf.NumberRange(40, 50),
+            "critRate": 12,
+            "critMultiplier": 1.25,
+        })
+    },
+    "big bad wizard": {
+        "create": lambda: Enemy("big bad wizard", {
+            "health": 250,
+            "maxHealth": 250,
+            "attackRange": mathf.NumberRange(40, 50),
+            "critRate": 15,
+            "critMultiplier": 1.5,
+        })
+    },
 }

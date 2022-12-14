@@ -35,12 +35,12 @@ class Node():
 
     firstTimeStoryId: str | None;
     
-    def __init__(self, name: str, params: NodeParams, firstTimeStoryId: str | None = None, onlyOneBattle: bool | None = None):
+    def __init__(self, name: str, connects: list[str], params: NodeParams, firstTimeStoryId: str | None = None, onlyOneBattle: bool | None = None):
         """
         Node links aren't set in the constructor. Do not forget to set them explicitly via property annotation afterwards.
         """
         self.name = name
-        self.connects = []
+        self.connects = connects;
         self.params = params;
         self.currentEnemy = None;
         self.firstTimeStoryId = firstTimeStoryId;
@@ -104,7 +104,7 @@ class Node():
 
 builtNodes: dict[str, Node] = {}
 
-builtNodes['grass patch'] = Node('grass patch', {
+builtNodes['grass patch'] = Node('grass patch', ["house"], {
     "searchChances": {
         "elixir of life": 100,
         "elixir of brutality": 100,
@@ -116,10 +116,10 @@ builtNodes['grass patch'] = Node('grass patch', {
         "drunken man": 50,
         "wolf": 50
     },
-    "encounterChance": 10,
+    "encounterChance": 10
 });
 
-builtNodes['house'] = Node('house', {
+builtNodes['house'] = Node('house', ["grass patch", "city"], {
     "searchChances": {
         "elixir of life": 100,
         "elixir of brutality": 100,
@@ -135,7 +135,7 @@ builtNodes['house'] = Node('house', {
     "encounterChance": 100,
 }, "bad_smell_house");
 
-builtNodes['city'] = Node('city', {
+builtNodes['city'] = Node('city', ["house", "castle gates", "stable", "northern forest", "southern forest"], {
     "searchChances": {
         "elixir of life": 100,
         "elixir of brutality": 100,
@@ -151,7 +151,7 @@ builtNodes['city'] = Node('city', {
     "encounterChance": 100,
 }, "city_ambient");
 
-builtNodes['castle gates'] = Node('castle gates', {
+builtNodes['castle gates'] = Node('castle gates', ["city", "castle tower"], {
     "searchChances": {
         "elixir of life": 100,
         "elixir of brutality": 100,
@@ -167,27 +167,24 @@ builtNodes['castle gates'] = Node('castle gates', {
     "encounterChance": 100,
 }, "castle_gates");
 
-builtNodes['castle tower'] = Node('castle tower', {
+builtNodes['castle tower'] = Node('castle tower', ["castle gates"], {
     "searchChances": {
-        "elixir of life": 100,
-        "elixir of brutality": 100,
-        "basic sword": .2
+        "elixir of intellect": 30,
+        "absolute zero": 100,
+        "barret 50": 1,
     },
     "maxSearches": 3,
     "maxSearchedItems": 3,
     "possibleEnemies": {
-        "small slime": 50,
-        "big slime": 49,
-        "very big slime": 1,
+        "big bad wizard": 100
     },
     "encounterChance": 100,
 }, "castle_tower", True);
 
-builtNodes['stable'] = Node('stable', {
+builtNodes['stable'] = Node('stable', ["city"], {
     "searchChances": {
-        "elixir of life": 100,
-        "elixir of brutality": 100,
-        "basic sword": .2
+        "sword of phantoms": 40,
+        "fish stick": 90
     },
     "maxSearches": 3,
     "maxSearchedItems": 3,
@@ -199,7 +196,7 @@ builtNodes['stable'] = Node('stable', {
     "encounterChance": 100,
 }, "very_bad_stable");
 
-builtNodes['southern forest'] = Node('southern forest', {
+builtNodes['southern forest'] = Node('southern forest', ["city"], {
     "searchChances": {
         "elixir of life": 100,
         "elixir of brutality": 100,
@@ -215,7 +212,7 @@ builtNodes['southern forest'] = Node('southern forest', {
     "encounterChance": 50,
 }, "beautiful forest");
 
-builtNodes['northern forest'] = Node('northern forest', {
+builtNodes['northern forest'] = Node('northern forest', ["city"], {
     "searchChances": {
         "finger of the fae": 10,
         "toe of the fae": 10,
@@ -224,14 +221,9 @@ builtNodes['northern forest'] = Node('northern forest', {
     "maxSearches": 3,
     "maxSearchedItems": 3,
     "possibleEnemies": {
-        "dark elf": 30,
+        "dark elf": 49,
         "elf": 50,
-        "elf with mental health issues": 19,
         "elf that aims to become the next demon king": 1
     },
-    "encounterChance": 100,
+    "encounterChance": 50,
 }, "dangerous_forest");
-
-
-builtNodes['origin'].connects.append('house')
-builtNodes['house'].connects.append('origin')

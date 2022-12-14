@@ -46,4 +46,4 @@ class PlayerNode():
         else:
             raise Exception(f"Node {node} does not exist!")
 
-currentPlayer: PlayerNode = PlayerNode(builtNodes["origin"])
+currentPlayer: PlayerNode = PlayerNode(builtNodes["grass patch"])

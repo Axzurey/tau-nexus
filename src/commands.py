@@ -10,8 +10,6 @@ from colorama import Fore, Style
 import random
 import stories
 
-Direction = Literal['north'] | Literal['south'] | Literal['east'] | Literal['west']
-
 class Command():
     name: str
     aliases: list[str]

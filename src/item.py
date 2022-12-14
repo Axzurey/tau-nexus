@@ -76,6 +76,46 @@ allItems = {
             "critMultiplier": 1.5,
         })
     },
+    "sword of phantoms": {
+        "type": "weapon",
+        "create": lambda: WeaponItem("sword of phantoms", ItemType.WEAPON, ["sword of phantom"], {
+            "damageMin": 25,
+            "damageMax": 35,
+            "critMultiplier": 1.55,
+        })
+    },
+    "fish stick": {
+        "type": "weapon",
+        "create": lambda: WeaponItem("fish stick", ItemType.WEAPON, [], {
+            "damageMin": 0.5,
+            "damageMax": 1,
+            "critMultiplier": 1,
+        })
+    },
+    "basic axe": {
+        "type": "weapon",
+        "create": lambda: WeaponItem("basic axe", ItemType.WEAPON, [], {
+            "damageMin": 20,
+            "damageMax": 25,
+            "critMultiplier": 1.75,
+        })
+    },
+    "absolute zero": {
+        "type": "weapon",
+        "create": lambda: WeaponItem("absolute zero", ItemType.WEAPON, [], {
+            "damageMin": 0,
+            "damageMax": 0,
+            "critMultiplier": 0,
+        })
+    },
+    "barett 50": {
+        "type": "weapon",
+        "create": lambda: WeaponItem("barett 50", ItemType.WEAPON, ["barett-50", "barett50"], {
+            "damageMin": 40,
+            "damageMax": 60,
+            "critMultiplier": 3,
+        })
+    },
     "elixir of life": {
         "type": "status",
         "create": lambda: StatusItem("elixir of life", ItemType.STATUS, ['elixirs of life'], [
@@ -93,6 +133,16 @@ allItems = {
                 "increaseMul": 1.1,
                 "increaseAdd": 5,
                 "stat": "strength"
+            }
+        ])
+    },
+    "elixir of intellect": {
+        "type": "status",
+        "create": lambda: StatusItem("elixir of intellect", ItemType.STATUS, ['elixirs of intellect'], [
+            {
+                "increaseMul": 1.25,
+                "increaseAdd": .5,
+                "stat": "critMultiplier"
             }
         ])
     }
