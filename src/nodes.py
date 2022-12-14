@@ -123,7 +123,9 @@ builtNodes['house'] = Node('house', ["grass patch", "city"], {
     "searchChances": {
         "elixir of life": 100,
         "elixir of brutality": 100,
-        "basic sword": .2
+        "battle axe": 30,
+        "sharp knife": 30,
+        "slightly sharper knife": 20
     },
     "maxSearches": 3,
     "maxSearchedItems": 3,
@@ -137,9 +139,11 @@ builtNodes['house'] = Node('house', ["grass patch", "city"], {
 
 builtNodes['city'] = Node('city', ["house", "castle gates", "stable", "northern forest", "southern forest"], {
     "searchChances": {
-        "elixir of life": 100,
-        "elixir of brutality": 100,
-        "basic sword": .2
+        "elixir of life": 70,
+        "elixir of brutality": 20,
+        "battle axe": 30,
+        "sharp knife": 30,
+        "slightly sharper knife": 20
     },
     "maxSearches": 3,
     "maxSearchedItems": 3,
@@ -153,9 +157,11 @@ builtNodes['city'] = Node('city', ["house", "castle gates", "stable", "northern 
 
 builtNodes['castle gates'] = Node('castle gates', ["city", "castle tower"], {
     "searchChances": {
-        "elixir of life": 100,
-        "elixir of brutality": 100,
-        "basic sword": .2
+        "elixir of life": 30,
+        "elixir of brutality": 50,
+        "battle axe": 20,
+        "sharp knife": 50,
+        "slightly sharper knife": 10
     },
     "maxSearches": 3,
     "maxSearchedItems": 3,
@@ -184,7 +190,8 @@ builtNodes['castle tower'] = Node('castle tower', ["castle gates"], {
 builtNodes['stable'] = Node('stable', ["city"], {
     "searchChances": {
         "sword of phantoms": 40,
-        "fish stick": 90
+        "fish stick": 90,
+        "sharp knife": 30,
     },
     "maxSearches": 3,
     "maxSearchedItems": 3,
@@ -199,8 +206,10 @@ builtNodes['stable'] = Node('stable', ["city"], {
 builtNodes['southern forest'] = Node('southern forest', ["city"], {
     "searchChances": {
         "elixir of life": 100,
-        "elixir of brutality": 100,
-        "basic sword": .2
+        "elixir of brutality": 15,
+        "battle axe": 20,
+        "sharp knife": 60,
+        "slightly sharper knife": 21
     },
     "maxSearches": 3,
     "maxSearchedItems": 3,
@@ -210,7 +219,7 @@ builtNodes['southern forest'] = Node('southern forest', ["city"], {
         "nymph bearing murderous intent": 20,
     },
     "encounterChance": 50,
-}, "beautiful forest");
+}, "beautiful_forest");
 
 builtNodes['northern forest'] = Node('northern forest', ["city"], {
     "searchChances": {

@@ -100,6 +100,30 @@ allItems = {
             "critMultiplier": 1.75,
         })
     },
+    "battle axe": {
+        "type": "weapon",
+        "create": lambda: WeaponItem("battle axe", ItemType.WEAPON, [], {
+            "damageMin": 35,
+            "damageMax": 40,
+            "critMultiplier": 1.85,
+        })
+    },
+    "sharp knife": {
+        "type": "weapon",
+        "create": lambda: WeaponItem("sharp knife", ItemType.WEAPON, [], {
+            "damageMin": 17,
+            "damageMax": 27,
+            "critMultiplier": 1.55,
+        })
+    },
+    "slightly sharper knife": {
+        "type": "weapon",
+        "create": lambda: WeaponItem("slightly sharper knife", ItemType.WEAPON, [], {
+            "damageMin": 25,
+            "damageMax": 35,
+            "critMultiplier": 1.75,
+        })
+    },
     "absolute zero": {
         "type": "weapon",
         "create": lambda: WeaponItem("absolute zero", ItemType.WEAPON, [], {
@@ -145,5 +169,35 @@ allItems = {
                 "stat": "critMultiplier"
             }
         ])
-    }
+    },
+    "finger of the fae": {
+        "type": "status",
+        "create": lambda: StatusItem("finger of the fae", ItemType.STATUS, ['fingers of the fae'], [
+            {
+                "increaseMul": 1.5,
+                "increaseAdd": .8,
+                "stat": "critMultiplier"
+            }
+        ])
+    },
+    "toe of the fae": {
+        "type": "status",
+        "create": lambda: StatusItem("toe of the fae", ItemType.STATUS, ['toes of the fae'], [
+            {
+                "increaseMul": 1.25,
+                "increaseAdd": 30,
+                "stat": "strength"
+            }
+        ])
+    },
+    "heart of the fae": {
+        "type": "status",
+        "create": lambda: StatusItem("heart of the fae", ItemType.STATUS, ['hearts of the fae'], [
+            {
+                "increaseMul": 2.5,
+                "increaseAdd": 50,
+                "stat": "health"
+            }
+        ])
+    },
 }

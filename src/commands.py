@@ -37,7 +37,7 @@ class MoveCommand(Command):
     def transformer(self, s: str):
         s = s.lower().strip();
         for word in self.redundantWords:
-            s = s.replace(word, '')
+            s = s.replace(f"{word} ", ' ');
         s = s.replace('  ', ' '); #replace double spaces that word removal might cause with single spaces.
         
         words = s.split(' ');
@@ -357,7 +357,7 @@ class EquipCommand(Command):
     def transformer(self, s: str):
         s = s.lower().strip();
         for word in self.redundantWords:
-            s = s.replace(word, '')
+            s = s.replace(f"{word} ", ' ')
         s = s.replace('  ', ' '); #replace double spaces that word removal might cause with single spaces.
         
         words = s.split(' ');
@@ -382,7 +382,7 @@ class EquipCommand(Command):
         for item in currentPlayer.items:
             s = item.name;
             for word in self.redundantWords:
-                s = s.replace(word, '');
+                s = s.replace(f"{word}", ' ');
             s = s.replace(' ', '');
 
             if s == target.replace(' ', ''):

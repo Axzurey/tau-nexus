@@ -52,5 +52,5 @@ class storyLine():
 
     def startStory(self):
         for view in self.content:
-            printStory(view[0], view[1] / 2);
-            time.sleep(view[1]);
+            printStory(view[0], view[1]);
+            time.sleep(.1);
