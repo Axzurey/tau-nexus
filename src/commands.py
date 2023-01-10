@@ -21,7 +21,7 @@ class Command():
     def transformer(self, _s: str) -> bool:
         raise Exception("NOT IMPLEMENTED!")
 
-    def callback(self):
+    def callback(self) -> Any:
         raise Exception("NOT IMPLEMENTED")
 
 class MoveCommand(Command):
@@ -292,7 +292,7 @@ class BattleCommand(Command):
             },
             "check": {
                 "aliases": ["inventory", "inv"],
-                "callback": lambda: printCHK
+                "callback": printCHK
             },
             "run": {
                 "aliases": ["escape", "flee"],
