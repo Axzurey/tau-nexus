@@ -175,7 +175,7 @@ def println(s: int | float | str, timeLapse: float = 1):
 def printinfo(s: int | float | str, timeLapse: float = 1):
     c = "<!> " + str(s);
 
-    print(f"{Fore.YELLOW}", end="")
+    print(f"{Fore.RED}", end="")
 
     for char in c:
         print(char, flush=True, end="");

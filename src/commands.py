@@ -276,7 +276,7 @@ class BattleCommand(Command):
             return "PASS";
         
         def printCHK():
-            print(f"{Fore.MAGENTA}", end="");
+            print(f"{Fore.CYAN}", end="");
             print(commands["inventory"]["object"].callback(True)); #type: ignore > It doesn't know.
             print(f"{Style.RESET_ALL}", end="");
             return "PASS";
@@ -327,7 +327,7 @@ class InventoryCommand(Command):
     def transformer(self, _s: str):
         res = self.callback();
 
-        print(f"{Fore.MAGENTA}", end="");
+        print(f"{Fore.CYAN}", end="");
         print(res); #type: ignore > It doesn't know.
         print(f"{Style.RESET_ALL}", end="");
         
@@ -422,7 +422,7 @@ class StatusCommand(Command):
 
     def transformer(self, _s):
 
-        print(f"{Fore.MAGENTA}", end="");
+        print(f"{Fore.CYAN}", end="");
         outS = '\n'.join([f'{i}: {currentPlayer.stats[i]}' for i in currentPlayer.stats]);
         print(f"{Style.RESET_ALL}", end="");
 
@@ -442,7 +442,7 @@ class InspectCommand(Command):
 
         printinfo(f"Your fairy appraises your weapon...");
         time.sleep(.25);
-        print(f"{Fore.MAGENTA}", end="");
+        print(f"{Fore.CYAN}", end="");
         print(outS);
         print(f"{Style.RESET_ALL}", end="");
 
@@ -493,7 +493,7 @@ class HelpCommand(Command):
             printinfo(commandHelpCenter[targetCommand]);
         else:
             outS = '\n'.join([f"<#> {i}: {commandHelpCenter[i]}" for i in commandHelpCenter]);
-            print(f"{Fore.MAGENTA}", end="");
+            print(f"{Fore.CYAN}", end="");
             print(outS);
             print(f"{Style.RESET_ALL}", end="");
 
