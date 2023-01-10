@@ -382,9 +382,8 @@ class EquipCommand(Command):
         for item in currentPlayer.items:
             s = item.name;
             for word in self.redundantWords:
-                s = s.replace(f"{word}", ' ');
+                s = s.replace(f"{word} ", ' ');
             s = s.replace(' ', '');
-
             if s == target.replace(' ', ''):
                 if item.type != ItemType.WEAPON:
                     printinfo("You can't use consumable items outside of battle");
